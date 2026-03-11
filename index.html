@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Room Blog Mission 🔐</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+:root{--red:#e8173a;--pink:#ff4d77;--hotpink:#ff1a5e;--dark:#1a1a2e;--gray:#f4f4f8;--accent:#ffe600;--green:#22c55e;--orange:#ff7c35;--blue:#3b82f6;--purple:#8b5cf6;--teal:#14b8a6;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#0f0f1a;color:#1a1a2e;min-height:100vh;overflow-x:hidden;}
+/* HERO */
+#hero{background:linear-gradient(135deg,#1a0010,#2d0020 40%,#0a0a1f);padding:40px 20px 28px;text-align:center;position:relative;overflow:hidden;border-bottom:4px solid var(--red);}
+#hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(232,23,58,.18) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(255,77,119,.12) 0%,transparent 60%);}
+.badge{display:inline-block;background:var(--red);color:#fff;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:3px;padding:6px 16px;border-radius:20px;margin-bottom:14px;text-transform:uppercase;}
+#hero h1{font-family:'Bangers',cursive;font-size:clamp(46px,10vw,86px);color:var(--accent);letter-spacing:4px;line-height:1;text-shadow:4px 4px 0 var(--red),8px 8px 0 rgba(232,23,58,.3);position:relative;}
+#hero h2{font-family:'Bangers',cursive;font-size:clamp(18px,4vw,30px);color:#fff;letter-spacing:3px;margin-top:6px;}
+#hero p{color:rgba(255,255,255,.7);font-size:14px;margin-top:6px;}
+.heb-sub{color:rgba(255,220,0,.8);font-size:13px;direction:rtl;margin-top:3px;}
+/* NAME */
+#name-section{background:#16162a;padding:18px 20px;text-align:center;border-bottom:2px solid rgba(255,255,255,.05);}
+#name-section label{color:rgba(255,255,255,.7);font-size:14px;font-weight:700;display:block;margin-bottom:3px;}
+.bil-lbl{color:rgba(255,220,0,.7);font-size:12px;display:block;margin-bottom:8px;}
+#student-name{padding:10px 20px;border-radius:12px;border:2px solid var(--red);background:#1a1a2e;color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;width:280px;outline:none;text-align:center;}
+#student-name:focus{border-color:var(--accent);}
+/* SCORE STRIP */
+#score-strip{background:#16162a;padding:10px 20px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;border-bottom:2px solid rgba(255,255,255,.05);position:sticky;top:0;z-index:100;}
+.score-pill{background:#1e1e38;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:800;font-family:'Space Mono',monospace;color:#fff;border:1.5px solid rgba(255,255,255,.1);}
+.score-pill span{color:var(--accent);}
+.score-pill.penalty span{color:var(--red);}
+.score-pill.net span{color:var(--green);}
+/* PROGRESS */
+#progress-bar-wrap{background:#0f0f1a;padding:14px 20px;max-width:820px;margin:0 auto;}
+#progress-label{color:rgba(255,255,255,.5);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+#progress-track{background:#1e1e38;border-radius:20px;height:10px;overflow:hidden;}
+#progress-fill{background:linear-gradient(90deg,var(--red),var(--pink),var(--accent));height:100%;border-radius:20px;transition:width .6s cubic-bezier(.34,1.56,.64,1);width:0%;}
+/* NAV TABS */
+#nav-tabs{display:flex;justify-content:center;gap:8px;padding:14px 20px;flex-wrap:wrap;max-width:900px;margin:0 auto;}
+.nav-tab{padding:7px 15px;border-radius:12px;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;border:2px solid transparent;transition:all .2s;background:#1e1e38;color:rgba(255,255,255,.35);}
+.nav-tab.unlocked{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.1);}
+.nav-tab.active{background:var(--red);color:#fff;border-color:var(--red);transform:translateY(-2px);box-shadow:0 4px 12px rgba(232,23,58,.4);}
+/* MAIN */
+#main{max-width:820px;margin:0 auto;padding:20px;}
+.section-page{display:none;}
+.section-page.active{display:block;}
+/* SECTION HEADER */
+.section-header{background:linear-gradient(135deg,var(--red),#c0103a);border-radius:20px 20px 0 0;padding:22px 28px;position:relative;overflow:hidden;}
+.section-header::after{content:'';position:absolute;right:-20px;top:-20px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%;}
+.section-num{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.6);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:4px;}
+.section-header h2{font-family:'Bangers',cursive;font-size:30px;color:#fff;letter-spacing:2px;}
+.section-header h2 small{display:block;font-family:'Nunito',sans-serif;font-size:14px;letter-spacing:1px;opacity:.85;direction:rtl;margin-top:2px;}
+.section-points{position:absolute;top:18px;right:26px;background:rgba(0,0,0,.3);color:var(--accent);font-family:'Space Mono',monospace;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;}
+/* TASK CARDS */
+.task-card{background:#fff;padding:22px 26px;border-left:4px solid transparent;border-bottom:1px solid #eee;}
+.task-card:last-of-type{border-radius:0 0 20px 20px;border-bottom:none;}
+.task-card.task-vocab{border-left-color:var(--purple);}
+.task-card.task-listen{border-left-color:var(--blue);}
+.task-card.task-cloze{border-left-color:var(--orange);}
+.task-card.task-speak{border-left-color:var(--red);}
+.task-card.task-comp{border-left-color:var(--green);}
+.task-card.task-translate{border-left-color:var(--pink);}
+.task-card.task-write{border-left-color:var(--hotpink);}
+.task-card.task-game{border-left-color:var(--teal);}
+.task-label{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#999;margin-bottom:7px;font-family:'Space Mono',monospace;}
+.task-label .heb{font-family:'Nunito',sans-serif;direction:rtl;letter-spacing:0;font-size:12px;color:#bbb;text-transform:none;}
+.task-card h3{font-size:17px;font-weight:900;color:var(--dark);margin-bottom:3px;}
+.task-card .heb-ins{font-size:13px;color:var(--red);font-weight:700;margin-bottom:12px;direction:rtl;display:block;}
+/* READING */
+.reading-text{background:#fafafa;border-radius:12px;padding:18px;font-size:16px;line-height:1.9;color:#333;margin-bottom:14px;border:1px solid #eee;}
+/* BUTTONS */
+.btn{padding:11px 22px;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 12px rgba(232,23,58,.3);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(34,197,94,.3);}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(59,130,246,.3);}
+.btn-orange{background:var(--orange);color:#fff;box-shadow:0 4px 12px rgba(255,124,53,.3);}
+.btn-gray{background:#e5e7eb;color:#555;}
+.btn-dark{background:var(--dark);color:#fff;}
+.btn-pink{background:var(--pink);color:#fff;}
+.btn-teal{background:var(--teal);color:#fff;}
+.btn-sm{padding:7px 14px;font-size:13px;border-radius:8px;}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+/* VOCAB */
+.vocab-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.vocab-col{display:flex;flex-direction:column;gap:7px;}
+.vocab-item{padding:9px 14px;border-radius:10px;background:#f4f4f8;font-size:14px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .2s;text-align:center;user-select:none;}
+.vocab-item:hover{border-color:var(--purple);transform:scale(1.02);}
+.vocab-item.selected{background:#e8d5ff;border-color:var(--purple);}
+.vocab-item.matched{background:#d1fae5;border-color:var(--green);color:#166534;cursor:default;}
+.vocab-item.wrong{background:#fee2e2;border-color:var(--red);animation:shake .4s;}
+.vocab-item.hebrew{direction:rtl;font-size:15px;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* CLOZE */
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding:12px;background:#f4f4f8;border-radius:10px;min-height:52px;}
+.word-chip{padding:7px 15px;background:#fff;border:2px solid #ccc;border-radius:20px;font-size:14px;font-weight:700;cursor:grab;transition:all .2s;user-select:none;}
+.word-chip:hover{border-color:var(--orange);color:var(--orange);}
+.word-chip.used{opacity:.28;cursor:not-allowed;pointer-events:none;text-decoration:line-through;}
+.word-chip.tap-selected{background:#fff3e0;border-color:var(--orange);color:var(--orange);box-shadow:0 0 0 3px rgba(255,124,53,.25);transform:scale(1.06);}
+.tap-hint{display:none;font-size:12px;color:var(--orange);font-weight:700;margin-bottom:8px;padding:6px 12px;background:#fff8f0;border-radius:8px;border:1.5px dashed var(--orange);}
+@media(hover:none){.tap-hint{display:block;}}
+.blank.tap-ready{border-color:var(--orange);background:#fff8f0;animation:pulse-blank .7s infinite alternate;}
+@keyframes pulse-blank{from{box-shadow:0 0 0 0 rgba(255,124,53,.4);}to{box-shadow:0 0 0 6px rgba(255,124,53,.0);}}
+.cloze-passage{font-size:16px;line-height:2.5;color:#333;background:#fafafa;border-radius:12px;padding:18px;border:1px solid #eee;}
+.blank{display:inline-block;min-width:85px;border:2px dashed var(--orange);padding:3px 8px;text-align:center;color:var(--orange);font-weight:800;vertical-align:middle;border-radius:8px;transition:all .2s;cursor:pointer;background:#fff;margin:0 2px;}
+.blank.drag-over{background:#fff3e0;border-color:var(--red);transform:scale(1.05);}
+.blank.filled{border-style:solid;border-color:var(--green);color:#166534;background:#f0fdf4;}
+.blank.wrong-fill{border-color:var(--red);background:#fee2e2;color:var(--red);}
+/* MCQ */
+.quiz-question{margin-bottom:18px;}
+.quiz-question p{font-size:15px;font-weight:700;margin-bottom:5px;color:var(--dark);}
+.quiz-question .heb-q{font-size:12px;color:#999;direction:rtl;display:block;margin-bottom:7px;}
+.option-list{display:flex;flex-direction:column;gap:7px;}
+.option-btn{padding:11px 14px;background:#f4f4f8;border:2px solid transparent;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:left;transition:all .2s;}
+.option-btn:hover:not(:disabled){border-color:var(--blue);background:#eff6ff;}
+.option-btn.correct{background:#d1fae5;border-color:var(--green);color:#166534;}
+.option-btn.incorrect{background:#fee2e2;border-color:var(--red);color:#991b1b;}
+.option-btn:disabled{cursor:default;}
+/* KARAOKE */
+.listen-progress{height:6px;background:#e5e7eb;border-radius:6px;margin-bottom:10px;overflow:hidden;}
+.listen-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:6px;width:0%;transition:width .3s;}
+.karaoke-text{background:#1a1a2e;border-radius:14px;padding:18px;font-size:16px;line-height:2.2;color:rgba(255,255,255,.45);margin-bottom:14px;}
+.karaoke-word{display:inline;padding:1px 2px;border-radius:3px;transition:all .15s;}
+.karaoke-word.active{color:var(--accent);background:rgba(255,230,0,.12);}
+.karaoke-word.done{color:rgba(255,255,255,.8);}
+/* RECORDER */
+.recorder-box{background:#1a1a2e;border-radius:14px;padding:18px;margin-top:10px;}
+.recorder-status{font-family:'Space Mono',monospace;font-size:12px;color:rgba(255,255,255,.6);margin-bottom:12px;}
+.recorder-status.recording{color:var(--red);}
+.recorder-controls{display:flex;gap:9px;flex-wrap:wrap;}
+.rec-timer{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:#fff;margin-bottom:10px;}
+.audio-player{width:100%;margin-top:10px;border-radius:8px;}
+.rec-decision{background:#f0fdf4;border:2px solid var(--green);border-radius:12px;padding:14px;margin-top:10px;display:none;}
+.rec-decision p{font-weight:700;color:#166534;margin-bottom:8px;font-size:14px;}
+.rec-decision .heb{direction:rtl;color:#166534;font-size:12px;display:block;margin-bottom:8px;}
+.rec-decision-btns{display:flex;gap:9px;flex-wrap:wrap;}
+/* TRUE/FALSE */
+.tf-item{background:#f4f4f8;border-radius:12px;padding:13px 16px;margin-bottom:9px;border:2px solid transparent;}
+.tf-item p{font-size:14px;font-weight:700;margin-bottom:9px;}
+.tf-btns{display:flex;gap:7px;margin-bottom:9px;}
+.tf-btn{padding:7px 18px;border-radius:8px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;border:2px solid transparent;background:#fff;transition:all .2s;}
+.tf-btn.true-btn{color:var(--green);border-color:var(--green);}
+.tf-btn.false-btn{color:var(--red);border-color:var(--red);}
+.tf-btn.sel.true-btn{background:var(--green);color:#fff;}
+.tf-btn.sel.false-btn{background:var(--red);color:#fff;}
+.tf-correction{display:none;margin-top:7px;}
+.tf-correction textarea{width:100%;padding:7px 11px;border-radius:8px;border:2px solid #ddd;font-family:'Nunito',sans-serif;font-size:13px;resize:vertical;min-height:55px;}
+.tf-correction textarea:focus{outline:none;border-color:var(--orange);}
+/* TRANSLATION */
+.translate-sentence{background:#fffbeb;border-left:4px solid var(--accent);padding:11px 14px;font-size:15px;font-weight:700;border-radius:0 8px 8px 0;margin-bottom:11px;color:#333;}
+.translate-input{width:100%;padding:11px 14px;border-radius:10px;border:2px solid #ddd;font-family:'Nunito',sans-serif;font-size:14px;direction:rtl;resize:vertical;min-height:65px;}
+.translate-input:focus{outline:none;border-color:var(--pink);}
+.trans-feedback{border-radius:10px;padding:11px 14px;margin-top:9px;font-size:13px;font-weight:700;display:none;}
+.trans-feedback.correct{background:#f0fdf4;border:2px solid var(--green);color:#166534;}
+.trans-feedback.incorrect{background:#fef2f2;border:2px solid var(--red);color:#991b1b;}
+/* WRITING */
+.writing-input{width:100%;padding:13px 15px;border-radius:12px;border:2px solid #ddd;font-family:'Nunito',sans-serif;font-size:15px;resize:vertical;min-height:130px;line-height:1.7;}
+.writing-input:focus{outline:none;border-color:var(--red);}
+.writing-wordbank{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;}
+.writing-word{padding:4px 11px;background:#f4f4f8;border:1.5px solid #ddd;border-radius:20px;font-size:12px;font-weight:700;color:#555;}
+.sentence-ok{color:var(--green);font-weight:700;font-size:13px;}
+.sentence-bad{color:var(--red);font-weight:700;font-size:13px;}
+/* MATCHING */
+.match-container{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.match-col{display:flex;flex-direction:column;gap:7px;}
+.match-item{padding:11px 14px;border-radius:10px;background:#f4f4f8;font-size:13px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .2s;min-height:48px;display:flex;align-items:center;}
+.match-item:hover{border-color:var(--blue);}
+.match-item.selected{background:#dbeafe;border-color:var(--blue);}
+.match-item.matched{background:#d1fae5;border-color:var(--green);cursor:default;color:#166534;}
+.match-item.wrong{background:#fee2e2;border-color:var(--red);animation:shake .4s;}
+/* DONE CHECK */
+.done-check{display:inline-flex;align-items:center;gap:5px;background:#d1fae5;color:#166534;padding:5px 13px;border-radius:20px;font-size:12px;font-weight:800;margin-top:9px;}
+/* PARA SELECTOR */
+.para-option{padding:13px 16px;background:#f4f4f8;border-radius:12px;margin-bottom:7px;cursor:pointer;border:2px solid transparent;font-weight:700;font-size:14px;transition:all .2s;}
+.para-option:hover{border-color:var(--red);}
+.para-option.selected{background:#fff0f3;border-color:var(--red);}
+/* NAV BUTTONS */
+.nav-buttons{display:flex;justify-content:space-between;margin-top:22px;gap:10px;}
+.nav-buttons .btn{flex:1;max-width:200px;justify-content:center;}
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--dark);color:#fff;padding:12px 22px;border-radius:14px;font-weight:800;font-size:14px;z-index:9999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);max-width:320px;text-align:center;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.success{background:var(--green);}
+#toast.error{background:var(--red);}
+/* FINAL PAGE */
+#final-page{display:none;text-align:center;padding:20px;}
+.final-card{background:#fff;border-radius:24px;padding:36px;max-width:500px;margin:0 auto;}
+.final-card h1{font-family:'Bangers',cursive;font-size:48px;color:var(--red);letter-spacing:3px;margin-bottom:7px;}
+.score-breakdown{background:#f4f4f8;border-radius:14px;padding:18px;margin:18px 0;text-align:left;}
+.score-row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;font-weight:700;border-bottom:1px solid #eee;}
+.score-row:last-child{border-bottom:none;font-size:18px;}
+.grade-display{font-family:'Bangers',cursive;font-size:72px;color:var(--red);letter-spacing:4px;margin:14px 0;}
+.whatsapp-btn{background:#25d366;color:#fff;padding:14px 28px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;border:none;width:100%;margin-top:10px;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:9px;}
+.whatsapp-btn:hover{background:#1ebe5d;}
+/* ── MINI GAMES ── */
+/* Scramble */
+.scramble-box{background:#f4f4f8;border-radius:14px;padding:18px;margin-top:10px;}
+.scramble-word{font-family:'Bangers',cursive;font-size:36px;letter-spacing:8px;color:var(--purple);text-align:center;margin:10px 0;background:#fff;border-radius:10px;padding:10px;border:2px dashed var(--purple);}
+.scramble-input{width:100%;padding:10px 14px;border-radius:10px;border:2px solid #ddd;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;text-align:center;text-transform:lowercase;margin-top:10px;}
+.scramble-input:focus{outline:none;border-color:var(--purple);}
+.scramble-hint{font-size:13px;color:#888;margin-top:6px;direction:rtl;font-weight:700;}
+.scramble-counter{font-family:'Space Mono',monospace;font-size:13px;color:#888;margin-bottom:10px;}
+/* Sort */
+.sort-game{margin-top:10px;}
+.sort-chips-pool{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#f4f4f8;border-radius:10px;min-height:52px;margin-bottom:12px;}
+.sort-chip{padding:7px 14px;background:#fff;border:2px solid #ccc;border-radius:20px;font-size:14px;font-weight:700;cursor:grab;user-select:none;}
+.sort-chip:hover{border-color:var(--teal);}
+.sort-chip.placed{opacity:.3;pointer-events:none;}
+.sort-zones{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sort-zone{border:2px dashed #ccc;border-radius:12px;padding:10px;min-height:80px;}
+.sort-zone-label{font-size:12px;font-weight:800;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
+.sort-zone-label .heb{direction:rtl;display:block;font-size:11px;color:#aaa;text-transform:none;letter-spacing:0;}
+.sort-zone.drag-over{border-color:var(--teal);background:#f0fdf9;}
+.sort-placed{display:flex;flex-wrap:wrap;gap:6px;min-height:40px;}
+.sort-placed-item{padding:5px 11px;border-radius:16px;font-size:13px;font-weight:700;cursor:pointer;}
+.sort-placed-item.correct{background:#d1fae5;color:#166534;border:2px solid var(--green);}
+.sort-placed-item.incorrect{background:#fee2e2;color:#991b1b;border:2px solid var(--red);}
+.sort-placed-item.neutral{background:#e8d5ff;color:#5b21b6;border:2px solid var(--purple);}
+/* Speed Quiz */
+.speed-quiz{margin-top:10px;}
+.speed-q-display{background:var(--dark);color:#fff;border-radius:14px;padding:18px;text-align:center;margin-bottom:12px;}
+.speed-q-text{font-size:17px;font-weight:800;margin-bottom:8px;}
+.speed-q-heb{font-size:13px;color:rgba(255,220,0,.8);direction:rtl;}
+.speed-timer-bar{height:8px;background:#333;border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.speed-timer-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:8px;transition:width .1s linear;}
+.speed-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.speed-opt{padding:12px;border-radius:10px;background:#f4f4f8;border:2px solid transparent;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center;}
+.speed-opt:hover:not(:disabled){background:#dbeafe;border-color:var(--blue);}
+.speed-opt.correct{background:#d1fae5;border-color:var(--green);color:#166534;}
+.speed-opt.incorrect{background:#fee2e2;border-color:var(--red);color:#991b1b;}
+.speed-score{font-family:'Space Mono',monospace;font-size:13px;color:#888;margin-bottom:8px;}
+/* Sequence */
+.seq-game{margin-top:10px;}
+.seq-items{display:flex;flex-direction:column;gap:8px;}
+.seq-item{padding:12px 16px;background:#f4f4f8;border:2px dashed #ccc;border-radius:10px;font-size:14px;font-weight:700;cursor:grab;display:flex;align-items:center;gap:10px;user-select:none;}
+.seq-item:hover{border-color:var(--teal);}
+.seq-item.dragging-seq{opacity:.4;}
+.seq-item .handle{color:#bbb;font-size:18px;}
+.seq-item .num{background:var(--teal);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;}
+.seq-item.correct-pos{background:#d1fae5;border-color:var(--green);border-style:solid;}
+.seq-item.wrong-pos{background:#fee2e2;border-color:var(--red);border-style:solid;}
+/* Word Search */
+.wsearch-grid{display:inline-grid;gap:3px;margin:12px 0;background:#f4f4f8;padding:12px;border-radius:12px;}
+.wsearch-grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;}
+.wsearch-cell{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;border-radius:6px;cursor:pointer;user-select:none;background:#fff;border:2px solid #eee;transition:all .15s;color:#333;}
+.wsearch-cell:hover{background:#e8d5ff;border-color:var(--purple);}
+.wsearch-cell.selecting{background:#fef3c7;border-color:var(--accent);}
+.wsearch-cell.found{background:#d1fae5;border-color:var(--green);color:#166534;}
+.wsearch-words{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.wsearch-word{padding:5px 12px;background:#f4f4f8;border:2px solid #ddd;border-radius:16px;font-size:13px;font-weight:700;}
+.wsearch-word.found-word{background:#d1fae5;border-color:var(--green);color:#166534;text-decoration:line-through;}
+@media(max-width:600px){
+  /* Grid layouts → single column */
+  .vocab-grid,.match-container,.sort-zones,.speed-options{grid-template-columns:1fr;}
+  /* Task cards */
+  .task-card{padding:14px 15px;}
+  /* Hero */
+  #hero{padding:28px 14px 20px;}
+  /* Score strip — stack on small screens */
+  #score-strip{gap:8px;padding:8px 12px;}
+  .score-pill{font-size:11px;padding:4px 10px;}
+  /* Nav tabs */
+  #nav-tabs{gap:5px;padding:10px 12px;}
+  .nav-tab{padding:6px 10px;font-size:11px;border-radius:10px;}
+  /* Main padding */
+  #main{padding:12px 10px;}
+  /* Section header */
+  .section-header{padding:16px 18px;}
+  .section-header h2{font-size:22px;}
+  .section-points{top:12px;right:14px;font-size:11px;padding:4px 9px;}
+  /* Buttons — full width stacking */
+  .nav-buttons{flex-direction:column;gap:8px;}
+  .nav-buttons .btn{max-width:100%;}
+  /* Word chips — smaller */
+  .word-chip{font-size:13px;padding:6px 12px;}
+  .word-bank{gap:6px;padding:9px;}
+  /* Cloze passage */
+  .cloze-passage{font-size:14px;line-height:2.3;padding:13px;}
+  .blank{min-width:68px;font-size:13px;}
+  /* Vocab items */
+  .vocab-item{font-size:13px;padding:8px 10px;}
+  /* Karaoke */
+  .karaoke-text{font-size:14px;line-height:2.0;padding:13px;}
+  /* Recorder */
+  .recorder-controls{gap:7px;}
+  .rec-timer{font-size:18px;}
+  /* MCQ options */
+  .option-btn{font-size:13px;padding:9px 12px;}
+  /* Scramble */
+  .scramble-word{font-size:28px;letter-spacing:5px;}
+  .scramble-input{font-size:15px;}
+  /* True/False */
+  .tf-btns{gap:5px;}
+  .tf-btn{padding:6px 14px;font-size:13px;}
+  /* Writing */
+  .writing-input{font-size:14px;}
+  .writing-wordbank{gap:4px;}
+  .writing-word{font-size:11px;padding:3px 8px;}
+  /* Word search grid */
+  .wsearch-cell{width:26px;height:26px;font-size:12px;border-radius:4px;}
+  /* Match items */
+  .match-item{font-size:12px;padding:9px 11px;min-height:40px;}
+  /* Sequence */
+  .seq-item{font-size:13px;padding:10px 12px;}
+  /* Sort zones */
+  .sort-chip{font-size:13px;padding:6px 11px;}
+  /* Student name input */
+  #student-name{width:100%;max-width:100%;}
+  #name-section{padding:14px 16px;}
+  /* Final page */
+  #final-page{padding:0;}
+  /* Score strip pills — wrap nicely */
+  #score-strip{justify-content:center;}
+  /* Recorder decision */
+  .rec-decision-btns{gap:7px;}
+  /* Task label */
+  .task-label{font-size:10px;}
+  .task-card h3{font-size:15px;}
+  .task-card .heb-ins{font-size:12px;}
+  /* Reading text */
+  .reading-text{font-size:14px;padding:13px;}
+  /* Para options */
+  .para-option{font-size:13px;padding:11px 13px;}
+  /* Speed quiz */
+  .speed-q-text{font-size:15px;}
+  .speed-opt{font-size:13px;padding:10px 8px;}
+}
+</style>
+</head>
+<body>
+<div id="hero">
+  <div class="badge">🔐 Reading Mission</div>
+  <h1>TIME TO ESCAPE!</h1>
+  <h2>Blog Reading Activity</h2>
+  <p>Complete all 5 missions to crack the code! 🕵️</p>
+  <p class="heb-sub">השלם/י את כל 5 המשימות כדי לברוח! 🔑</p>
+</div>
+<div id="name-section">
+  <label>👤 Enter your name to begin:</label>
+  <span class="bil-lbl">הכנס/י את שמך כדי להתחיל</span>
+  <input type="text" id="student-name" placeholder="Your name / שמך..." oninput="saveName()">
+</div>
+<div id="score-strip">
+  <div class="score-pill">🎯 Raw: <span id="disp-raw">0</span>/100</div>
+  <div class="score-pill penalty">⚠️ Penalties: <span id="disp-pen">0</span></div>
+  <div class="score-pill net">✅ Net: <span id="disp-net">0</span></div>
+  <div class="score-pill">🏅 Grade: <span id="disp-grade">-</span></div>
+</div>
+<div id="progress-bar-wrap">
+  <div id="progress-label">Mission Progress / התקדמות</div>
+  <div id="progress-track"><div id="progress-fill"></div></div>
+</div>
+<div id="nav-tabs">
+  <button class="nav-tab active" onclick="goToSection(0)" id="tab-0">🔐 S1</button>
+  <button class="nav-tab" onclick="goToSection(1)" id="tab-1">🔍 S2</button>
+  <button class="nav-tab" onclick="goToSection(2)" id="tab-2">❓ S3</button>
+  <button class="nav-tab" onclick="goToSection(3)" id="tab-3">📖 S4</button>
+  <button class="nav-tab" onclick="goToSection(4)" id="tab-4">🏆 S5</button>
+</div>
+
+<div id="main">
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 1 – What Is an Escape Room?
+══════════════════════════════════════════════════ -->
+<div class="section-page active" id="section-0">
+  <div class="section-header">
+    <span class="section-num">Mission 01 · 18 Points</span>
+    <h2>🔐 What Is an Escape Room? <small>מה זה חדר בריחה?</small></h2>
+    <div class="section-points">18 pts</div>
+  </div>
+
+  <!-- VOCAB MATCH -->
+  <div class="task-card task-vocab">
+    <div class="task-label">🧩 Vocabulary <span class="heb">· אוצר מילים</span></div>
+    <h3>Match the words! / התאם/י את המילים!</h3>
+    <span class="heb-ins">לחץ/י על מילה באנגלית, ואחר כך על התרגום שלה בעברית.</span>
+    <div class="vocab-grid"><div class="vocab-col" id="s1-eng-col"></div><div class="vocab-col" id="s1-heb-col"></div></div>
+    <div id="s1-vocab-done" class="done-check" style="display:none">✅ Vocabulary done! / אוצר מילים הושלם!</div>
+  </div>
+
+  <!-- WORD SCRAMBLE MINI-GAME -->
+  <div class="task-card task-game">
+    <div class="task-label">🎮 Mini-Game <span class="heb">· משחק מיני</span></div>
+    <h3>Word Scramble! / פענח את המילה!</h3>
+    <span class="heb-ins">המילים מהטקסט מעורבבות! פענח/י כל מילה וכתוב/י אותה נכון.</span>
+    <div class="scramble-box" id="s1-scramble-box">
+      <div class="scramble-counter">Word <span id="s1-sc-cur">1</span> of <span id="s1-sc-tot">5</span> / מילה <span id="s1-sc-cur2">1</span> מתוך <span id="s1-sc-tot2">5</span></div>
+      <div class="scramble-word" id="s1-sc-word"></div>
+      <div class="scramble-hint" id="s1-sc-hint"></div>
+      <input type="text" class="scramble-input" id="s1-sc-input" placeholder="Type the correct word..." oninput="checkScramble('s1')">
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-gray btn-sm" onclick="skipScramble('s1')">Skip / דלג ←</button>
+        <div id="s1-sc-result" style="font-weight:800;font-size:14px;padding:8px 0;color:#166534;"></div>
+      </div>
+    </div>
+    <div id="s1-game-done" class="done-check" style="display:none">✅ Scramble done! / הצלחת!</div>
+  </div>
+
+  <!-- FIRST LISTEN -->
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 First Listen <span class="heb">· האזנה ראשונה</span></div>
+    <h3>Listen and follow along!</h3>
+    <span class="heb-ins">הקשב/י לטקסט ועקוב/י אחרי המילים המודגשות בצהוב.</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s1-lp1"></div></div>
+    <div class="karaoke-text" id="s1-kar1"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s1a','s1-l1-done','s1-lp1')">🔊 Listen / הקשב</button>
+    <div id="s1-l1-done" class="done-check" style="display:none">✅ Listened!</div>
+  </div>
+
+  <!-- CLOZE – exact text with blanks -->
+  <div class="task-card task-cloze">
+    <div class="task-label">✏️ Fill the Text <span class="heb">· מלא/י את הטקסט</span></div>
+    <h3>Complete the original text!</h3>
+    <span class="heb-ins">גרור/י את המילות המפתח לפערים בתוך הטקסט המקורי.</span>
+    <div class="tap-hint">👆 Tap a word, then tap a blank to place it / לחץ על מילה, אחר כך על הפער</div>
+    <div class="word-bank" id="s1-bank">
+      <div class="word-chip" draggable="true" data-word="adventure" ondragstart="dragStart(event)" onclick="selectChipTap(this)">adventure</div>
+      <div class="word-chip" draggable="true" data-word="locked" ondragstart="dragStart(event)" onclick="selectChipTap(this)">locked</div>
+      <div class="word-chip" draggable="true" data-word="clues" ondragstart="dragStart(event)" onclick="selectChipTap(this)">clues</div>
+      <div class="word-chip" draggable="true" data-word="mystery" ondragstart="dragStart(event)" onclick="selectChipTap(this)">mystery</div>
+      <div class="word-chip" draggable="true" data-word="puzzle" ondragstart="dragStart(event)" onclick="selectChipTap(this)">puzzle</div>
+      <div class="word-chip" draggable="true" data-word="escape" ondragstart="dragStart(event)" onclick="selectChipTap(this)">escape</div>
+    </div>
+    <div class="cloze-passage">
+      An escape room is a sixty-minute <span class="blank" id="s1-b0" data-answer="adventure" ondragover="dragOver(event)" ondrop="dropWord(event,'s1','0')" onclick="clearBlank('s1','0')">_ _ _</span> game. You and your team are <span class="blank" id="s1-b1" data-answer="locked" ondragover="dragOver(event)" ondrop="dropWord(event,'s1','1')" onclick="clearBlank('s1','1')">_ _ _</span> in a room. You have one hour to solve a <span class="blank" id="s1-b2" data-answer="mystery" ondragover="dragOver(event)" ondrop="dropWord(event,'s1','2')" onclick="clearBlank('s1','2')">_ _ _</span>. In order to <span class="blank" id="s1-b3" data-answer="escape" ondragover="dragOver(event)" ondrop="dropWord(event,'s1','3')" onclick="clearBlank('s1','3')">_ _ _</span>, you need to find the <span class="blank" id="s1-b4" data-answer="clues" ondragover="dragOver(event)" ondrop="dropWord(event,'s1','4')" onclick="clearBlank('s1','4')">_ _ _</span>. Every clue is a piece of a <span class="blank" id="s1-b5" data-answer="puzzle" ondragover="dragOver(event)" ondrop="dropWord(event,'s1','5')" onclick="clearBlank('s1','5')">_ _ _</span> that can help you escape.
+    </div>
+    <button class="btn btn-orange" style="margin-top:12px" onclick="checkCloze('s1',6)">✔ Check / בדוק</button>
+    <div id="s1-cloze-done" class="done-check" style="display:none">✅ Text complete! / הטקסט הושלם!</div>
+  </div>
+
+  <!-- SPEAKING -->
+  <div class="task-card task-speak">
+    <div class="task-label">🎤 Speaking <span class="heb">· דיבור</span></div>
+    <h3>Record yourself reading!</h3>
+    <span class="heb-ins">קרא/י את הטקסט בקול ותקליט/י. אחרי ההקלטה תוכל/י לבחור אם לשמור.</span>
+    <div class="reading-text" style="font-size:15px">An escape room is a sixty-minute adventure game. You and your team are locked in a room. You have one hour to solve a mystery. In order to escape, you need to find the clues. Every clue is a piece of a puzzle that can help you escape.</div>
+    <div class="recorder-box">
+      <div class="rec-timer" id="s1-timer">00:00</div>
+      <div class="recorder-status" id="s1-status">Press Record to start 🎙️</div>
+      <div class="recorder-controls">
+        <button class="btn btn-red btn-sm" onclick="startRec('s1')" id="s1-rec-btn">⏺ Record</button>
+        <button class="btn btn-gray btn-sm" onclick="stopRec('s1')" id="s1-stop-btn" disabled>⏹ Stop</button>
+      </div>
+      <audio id="s1-audio" class="audio-player" controls style="display:none"></audio>
+    </div>
+    <div class="rec-decision" id="s1-dec">
+      <p>🎧 Happy with it? / מרוצה מההקלטה?</p>
+      <span class="heb">האם אתה מרוצה מההקלטה שלך?</span>
+      <div class="rec-decision-btns">
+        <button class="btn btn-green btn-sm" onclick="keepRec('s1')">✅ Keep! / שמור</button>
+        <button class="btn btn-red btn-sm" onclick="reRec('s1')">🔄 Re-record / שוב</button>
+        <button class="btn btn-dark btn-sm" onclick="dlRec('s1')" id="s1-dl-btn">⬇ Download</button>
+      </div>
+    </div>
+    <div id="s1-speak-done" class="done-check" style="display:none">✅ Recording saved! / ההקלטה נשמרה!</div>
+  </div>
+
+  <!-- COMPREHENSION -->
+  <div class="task-card task-comp">
+    <div class="task-label">🧠 Comprehension <span class="heb">· הבנת הנקרא</span></div>
+    <h3>Answer the questions! / ענה/י על השאלות!</h3>
+    <div id="s1-mcq-container"></div>
+    <div id="s1-comp-done" class="done-check" style="display:none">✅ All correct!</div>
+  </div>
+
+  <!-- SECOND LISTEN -->
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 Listen Again <span class="heb">· האזנה שנייה</span></div>
+    <h3>Listen again before moving on!</h3>
+    <span class="heb-ins">חייב/ת להאזין שוב לפני המשך!</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s1-lp2"></div></div>
+    <div class="karaoke-text" id="s1-kar2"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s1b','s1-l2-done','s1-lp2')">🔊 Listen Again</button>
+    <div id="s1-l2-done" class="done-check" style="display:none">✅ Ready to continue!</div>
+  </div>
+
+  <!-- TRANSLATION -->
+  <div class="task-card task-translate">
+    <div class="task-label">🌐 Translation <span class="heb">· תרגום</span></div>
+    <h3>Translate into Hebrew / תרגם/י לעברית</h3>
+    <span class="heb-ins">תרגם/י את המשפט לעברית ולחץ/י על בדוק.</span>
+    <div class="translate-sentence">An escape room is a sixty-minute adventure game.</div>
+    <textarea class="translate-input" id="s1-trans" placeholder="כתוב/י את התרגום כאן..."></textarea>
+    <button class="btn btn-pink" style="margin-top:9px" onclick="checkTrans('s1-trans','s1-trans-fb','s1',
+      ['חדר בריחה הוא משחק הרפתקאות של שישים דקות','חדר בריחה הוא משחק הרפתקאות בן שישים דקות','חדר בריחה הוא משחק של הרפתקאות של שישים דקות','חדר בריחה הוא משחק הרפתקה של שישים דקות','חדר בריחה הוא משחק הרפתקאות שנמשך שישים דקות','חדר הבריחה הוא משחק הרפתקאות של שישים דקות','חדר בריחה הוא משחק הרפתקאות ארוך שישים דקות'])">✔ Check / בדוק</button>
+    <div class="trans-feedback" id="s1-trans-fb"></div>
+    <div id="s1-trans-done" class="done-check" style="display:none">✅ Translation done!</div>
+  </div>
+  <div class="nav-buttons"><div></div><button class="btn btn-red" onclick="nextSection(0)">Next Mission → / משימה הבאה</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 2 – What Do You Do?
+══════════════════════════════════════════════════ -->
+<div class="section-page" id="section-1">
+  <div class="section-header">
+    <span class="section-num">Mission 02 · 18 Points</span>
+    <h2>🔍 What Do You Do? <small>מה עושים בחדר הבריחה?</small></h2>
+    <div class="section-points">18 pts</div>
+  </div>
+
+  <div class="task-card task-vocab">
+    <div class="task-label">🧩 Vocabulary <span class="heb">· אוצר מילים</span></div>
+    <h3>Match the words!</h3>
+    <span class="heb-ins">לחץ/י על מילה באנגלית, ואחר כך על התרגום שלה בעברית.</span>
+    <div class="vocab-grid"><div class="vocab-col" id="s2-eng-col"></div><div class="vocab-col" id="s2-heb-col"></div></div>
+    <div id="s2-vocab-done" class="done-check" style="display:none">✅ Vocabulary done!</div>
+  </div>
+
+  <!-- WORD SORT MINI-GAME -->
+  <div class="task-card task-game">
+    <div class="task-label">🎮 Mini-Game <span class="heb">· משחק מיני</span></div>
+    <h3>Sort the Words! / מיין את המילים!</h3>
+    <span class="heb-ins">גרור/י כל מילה לקטגוריה הנכונה: מה אתה מוצא, ומה אתה מזיז?</span>
+    <div class="sort-game" id="s2-sort">
+      <div class="sort-chips-pool" id="s2-sort-pool" ondragover="sortZoneDragOver(event)" ondrop="sortPoolDrop(event,'s2-sort-pool')"></div>
+      <div class="sort-zones">
+        <div class="sort-zone" id="s2-zone-find" ondragover="sortZoneDragOver(event)" ondrop="sortZoneDrop(event,'s2-zone-find','find')">
+          <div class="sort-zone-label">Things You FIND 🔍<span class="heb">דברים שאתה מוצא</span></div>
+          <div class="sort-placed" id="s2-placed-find"></div>
+        </div>
+        <div class="sort-zone" id="s2-zone-move" ondragover="sortZoneDragOver(event)" ondrop="sortZoneDrop(event,'s2-zone-move','move')">
+          <div class="sort-zone-label">Things You MOVE / LOOK 🏃<span class="heb">דברים שאתה מזיז/בודק</span></div>
+          <div class="sort-placed" id="s2-placed-move"></div>
+        </div>
+      </div>
+      <button class="btn btn-teal btn-sm" style="margin-top:12px" onclick="checkSort('s2')">✔ Check Sort / בדוק</button>
+    </div>
+    <div id="s2-game-done" class="done-check" style="display:none">✅ Sort complete!</div>
+  </div>
+
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 First Listen <span class="heb">· האזנה ראשונה</span></div>
+    <h3>Listen and follow along!</h3>
+    <span class="heb-ins">הקשב/י לטקסט ועקוב/י אחרי המילים.</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s2-lp1"></div></div>
+    <div class="karaoke-text" id="s2-kar1"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s2a','s2-l1-done','s2-lp1')">🔊 Listen</button>
+    <div id="s2-l1-done" class="done-check" style="display:none">✅ Listened!</div>
+  </div>
+
+  <!-- CLOZE – exact text -->
+  <div class="task-card task-cloze">
+    <div class="task-label">✏️ Fill the Text <span class="heb">· מלא/י את הטקסט</span></div>
+    <h3>Complete the original text!</h3>
+    <span class="heb-ins">גרור/י את המילות המפתח לפערים בתוך הטקסט המקורי.</span>
+    <div class="tap-hint">👆 Tap a word, then tap a blank to place it / לחץ על מילה, אחר כך על הפער</div>
+    <div class="word-bank" id="s2-bank">
+      <div class="word-chip" draggable="true" data-word="explore" ondragstart="dragStart(event)" onclick="selectChipTap(this)">explore</div>
+      <div class="word-chip" draggable="true" data-word="clues" ondragstart="dragStart(event)" onclick="selectChipTap(this)">clues</div>
+      <div class="word-chip" draggable="true" data-word="furniture" ondragstart="dragStart(event)" onclick="selectChipTap(this)">furniture</div>
+      <div class="word-chip" draggable="true" data-word="carpet" ondragstart="dragStart(event)" onclick="selectChipTap(this)">carpet</div>
+      <div class="word-chip" draggable="true" data-word="drawer" ondragstart="dragStart(event)" onclick="selectChipTap(this)">drawer</div>
+      <div class="word-chip" draggable="true" data-word="hurry" ondragstart="dragStart(event)" onclick="selectChipTap(this)">hurry</div>
+      <div class="word-chip" draggable="true" data-word="counting" ondragstart="dragStart(event)" onclick="selectChipTap(this)">counting</div>
+    </div>
+    <div class="cloze-passage">
+      You <span class="blank" id="s2-b0" data-answer="explore" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','0')" onclick="clearBlank('s2','0')">_ _ _</span> everything in the room to find the <span class="blank" id="s2-b1" data-answer="clues" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','1')" onclick="clearBlank('s2','1')">_ _ _</span> that are hiding there. Everywhere you look, you might notice a clue to help you escape. For example, you move <span class="blank" id="s2-b2" data-answer="furniture" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','2')" onclick="clearBlank('s2','2')">_ _ _</span>, look under the <span class="blank" id="s2-b3" data-answer="carpet" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','3')" onclick="clearBlank('s2','3')">_ _ _</span> and examine the books on the shelves. You look closely at all the paintings on the wall. You can find a photo among objects in a <span class="blank" id="s2-b4" data-answer="drawer" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','4')" onclick="clearBlank('s2','4')">_ _ _</span> or a key under a lamp. There may even be puzzles that you have to solve. However, you have to <span class="blank" id="s2-b5" data-answer="hurry" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','5')" onclick="clearBlank('s2','5')">_ _ _</span> – you only have sixty minutes. The clock immediately starts <span class="blank" id="s2-b6" data-answer="counting" ondragover="dragOver(event)" ondrop="dropWord(event,'s2','6')" onclick="clearBlank('s2','6')">_ _ _</span> down the minute you enter the escape room!
+    </div>
+    <button class="btn btn-orange" style="margin-top:12px" onclick="checkCloze('s2',7)">✔ Check / בדוק</button>
+    <div id="s2-cloze-done" class="done-check" style="display:none">✅ Text complete!</div>
+  </div>
+
+  <div class="task-card task-speak">
+    <div class="task-label">🎤 Speaking <span class="heb">· דיבור</span></div>
+    <h3>Record yourself reading!</h3>
+    <span class="heb-ins">קרא/י את הטקסט בקול ותקליט/י. אחר כך תחליט/י אם לשמור.</span>
+    <div class="reading-text" style="font-size:15px">You explore everything in the room to find the clues that are hiding there. Everywhere you look, you might notice a clue to help you escape. For example, you move furniture, look under the carpet and examine the books on the shelves. You look closely at all the paintings on the wall. You can find a photo among objects in a drawer or a key under a lamp. There may even be puzzles that you have to solve. However, you have to hurry – you only have sixty minutes. The clock immediately starts counting down the minute you enter the escape room!</div>
+    <div class="recorder-box">
+      <div class="rec-timer" id="s2-timer">00:00</div>
+      <div class="recorder-status" id="s2-status">Press Record to start 🎙️</div>
+      <div class="recorder-controls">
+        <button class="btn btn-red btn-sm" onclick="startRec('s2')" id="s2-rec-btn">⏺ Record</button>
+        <button class="btn btn-gray btn-sm" onclick="stopRec('s2')" id="s2-stop-btn" disabled>⏹ Stop</button>
+      </div>
+      <audio id="s2-audio" class="audio-player" controls style="display:none"></audio>
+    </div>
+    <div class="rec-decision" id="s2-dec">
+      <p>🎧 Happy with it?</p><span class="heb">האם אתה מרוצה?</span>
+      <div class="rec-decision-btns">
+        <button class="btn btn-green btn-sm" onclick="keepRec('s2')">✅ Keep!</button>
+        <button class="btn btn-red btn-sm" onclick="reRec('s2')">🔄 Re-record</button>
+        <button class="btn btn-dark btn-sm" onclick="dlRec('s2')" id="s2-dl-btn">⬇ Download</button>
+      </div>
+    </div>
+    <div id="s2-speak-done" class="done-check" style="display:none">✅ Recording saved!</div>
+  </div>
+
+  <div class="task-card task-comp">
+    <div class="task-label">🧠 Comprehension <span class="heb">· הבנת הנקרא</span></div>
+    <h3>Answer the questions!</h3>
+    <div id="s2-mcq-container"></div>
+    <div id="s2-comp-done" class="done-check" style="display:none">✅ All correct!</div>
+  </div>
+
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 Listen Again <span class="heb">· האזנה שנייה</span></div>
+    <h3>Listen again before moving on!</h3>
+    <span class="heb-ins">חייב/ת להאזין שוב לפני המשך!</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s2-lp2"></div></div>
+    <div class="karaoke-text" id="s2-kar2"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s2b','s2-l2-done','s2-lp2')">🔊 Listen Again</button>
+    <div id="s2-l2-done" class="done-check" style="display:none">✅ Ready!</div>
+  </div>
+
+  <div class="task-card task-translate">
+    <div class="task-label">🌐 Translation <span class="heb">· תרגום</span></div>
+    <h3>Translate into Hebrew</h3>
+    <span class="heb-ins">תרגם/י את המשפט ולחץ/י על בדוק.</span>
+    <div class="translate-sentence">You explore everything in the room to find the clues.</div>
+    <textarea class="translate-input" id="s2-trans" placeholder="כתוב/י את התרגום כאן..."></textarea>
+    <button class="btn btn-pink" style="margin-top:9px" onclick="checkTrans('s2-trans','s2-trans-fb','s2',
+      ['אתה חוקר הכל בחדר כדי למצוא את הרמזים','אתה חוקר את הכל בחדר כדי למצוא את הרמזים','את חוקרת הכל בחדר כדי למצוא את הרמזים','את חוקרת את הכל בחדר כדי למצוא את הרמזים','אתה מחפש הכל בחדר כדי למצוא את הרמזים','אתה בוחן הכל בחדר כדי למצוא את הרמזים','אתה חוקר את הכל בחדר על מנת למצוא את הרמזים'])">✔ Check / בדוק</button>
+    <div class="trans-feedback" id="s2-trans-fb"></div>
+    <div id="s2-trans-done" class="done-check" style="display:none">✅ Translation done!</div>
+  </div>
+  <div class="nav-buttons"><button class="btn btn-gray" onclick="goToSection(0)">← Back</button><button class="btn btn-red" onclick="nextSection(1)">Next →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 3 – Why Popular?
+══════════════════════════════════════════════════ -->
+<div class="section-page" id="section-2">
+  <div class="section-header">
+    <span class="section-num">Mission 03 · 18 Points</span>
+    <h2>❓ Why Are They Popular? <small>למה חדרי בריחה פופולריים?</small></h2>
+    <div class="section-points">18 pts</div>
+  </div>
+
+  <div class="task-card task-vocab">
+    <div class="task-label">🧩 Vocabulary <span class="heb">· אוצר מילים</span></div>
+    <h3>Match the words!</h3>
+    <span class="heb-ins">לחץ/י על מילה באנגלית, ואחר כך על התרגום שלה בעברית.</span>
+    <div class="vocab-grid"><div class="vocab-col" id="s3-eng-col"></div><div class="vocab-col" id="s3-heb-col"></div></div>
+    <div id="s3-vocab-done" class="done-check" style="display:none">✅ Vocabulary done!</div>
+  </div>
+
+  <!-- SPEED QUIZ MINI-GAME -->
+  <div class="task-card task-game">
+    <div class="task-label">⚡ Speed Quiz <span class="heb">· חידון מהיר</span></div>
+    <h3>Answer Fast! / ענה/י מהר!</h3>
+    <span class="heb-ins">ענה/י על כל שאלה לפני שהזמן נגמר! לחץ/י על התשובה הנכונה.</span>
+    <div class="speed-quiz" id="s3-speed-quiz">
+      <div class="speed-score">Score: <span id="s3-sq-score">0</span> / 4 | Streak: <span id="s3-sq-streak">🔥0</span></div>
+      <div class="speed-q-display">
+        <div class="speed-timer-bar"><div class="speed-timer-fill" id="s3-sq-timer-fill" style="width:100%"></div></div>
+        <div class="speed-q-text" id="s3-sq-text">Press Start! / לחץ להתחיל!</div>
+        <div class="speed-q-heb" id="s3-sq-heb"></div>
+      </div>
+      <div class="speed-options" id="s3-sq-opts"></div>
+      <button class="btn btn-teal btn-sm" style="margin-top:10px" id="s3-sq-start-btn" onclick="startSpeedQuiz('s3')">🚀 Start / התחל</button>
+    </div>
+    <div id="s3-game-done" class="done-check" style="display:none">✅ Speed Quiz done!</div>
+  </div>
+
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 First Listen <span class="heb">· האזנה ראשונה</span></div>
+    <h3>Listen and follow along!</h3>
+    <span class="heb-ins">הקשב/י לטקסט ועקוב/י אחרי המילים.</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s3-lp1"></div></div>
+    <div class="karaoke-text" id="s3-kar1"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s3a','s3-l1-done','s3-lp1')">🔊 Listen</button>
+    <div id="s3-l1-done" class="done-check" style="display:none">✅ Listened!</div>
+  </div>
+
+  <!-- CLOZE – exact text -->
+  <div class="task-card task-cloze">
+    <div class="task-label">✏️ Fill the Text <span class="heb">· מלא/י את הטקסט</span></div>
+    <h3>Complete the original text!</h3>
+    <span class="heb-ins">גרור/י את המילות המפתח לפערים בתוך הטקסט המקורי.</span>
+    <div class="tap-hint">👆 Tap a word, then tap a blank to place it / לחץ על מילה, אחר כך על הפער</div>
+    <div class="word-bank" id="s3-bank">
+      <div class="word-chip" draggable="true" data-word="surprise" ondragstart="dragStart(event)" onclick="selectChipTap(this)">surprise</div>
+      <div class="word-chip" draggable="true" data-word="perfect" ondragstart="dragStart(event)" onclick="selectChipTap(this)">perfect</div>
+      <div class="word-chip" draggable="true" data-word="team" ondragstart="dragStart(event)" onclick="selectChipTap(this)">team</div>
+      <div class="word-chip" draggable="true" data-word="movie" ondragstart="dragStart(event)" onclick="selectChipTap(this)">movie</div>
+      <div class="word-chip" draggable="true" data-word="thousand" ondragstart="dragStart(event)" onclick="selectChipTap(this)">thousand</div>
+      <div class="word-chip" draggable="true" data-word="online" ondragstart="dragStart(event)" onclick="selectChipTap(this)">online</div>
+    </div>
+    <div class="cloze-passage">
+      It's not a <span class="blank" id="s3-b0" data-answer="surprise" ondragover="dragOver(event)" ondrop="dropWord(event,'s3','0')" onclick="clearBlank('s3','0')">_ _ _</span> escape rooms are so popular. They are a <span class="blank" id="s3-b1" data-answer="perfect" ondragover="dragOver(event)" ondrop="dropWord(event,'s3','1')" onclick="clearBlank('s3','1')">_ _ _</span> way to spend time with your family and friends or just have fun. You have to work together as a <span class="blank" id="s3-b2" data-answer="team" ondragover="dragOver(event)" ondrop="dropWord(event,'s3','2')" onclick="clearBlank('s3','2')">_ _ _</span> and work fast to solve the mystery and escape. When you and your team enter the escape room, you feel like you're in a <span class="blank" id="s3-b3" data-answer="movie" ondragover="dragOver(event)" ondrop="dropWord(event,'s3','3')" onclick="clearBlank('s3','3')">_ _ _</span>. There are now close to five <span class="blank" id="s3-b4" data-answer="thousand" ondragover="dragOver(event)" ondrop="dropWord(event,'s3','4')" onclick="clearBlank('s3','4')">_ _ _</span> escape rooms around the world! To choose an escape room near you and learn more about escape rooms, look us up <span class="blank" id="s3-b5" data-answer="online" ondragover="dragOver(event)" ondrop="dropWord(event,'s3','5')" onclick="clearBlank('s3','5')">_ _ _</span>.
+    </div>
+    <button class="btn btn-orange" style="margin-top:12px" onclick="checkCloze('s3',6)">✔ Check / בדוק</button>
+    <div id="s3-cloze-done" class="done-check" style="display:none">✅ Text complete!</div>
+  </div>
+
+  <div class="task-card task-speak">
+    <div class="task-label">🎤 Speaking <span class="heb">· דיבור</span></div>
+    <h3>Record yourself reading!</h3>
+    <span class="heb-ins">קרא/י את הטקסט בקול ותקליט/י. אחר כך תחליט/י.</span>
+    <div class="reading-text" style="font-size:15px">It's not a surprise escape rooms are so popular. They are a perfect way to spend time with your family and friends or just have fun. You have to work together as a team and work fast to solve the mystery and escape. When you and your team enter the escape room, you feel like you're in a movie. There are now close to five thousand escape rooms around the world! To choose an escape room near you and learn more about escape rooms, look us up online.</div>
+    <div class="recorder-box">
+      <div class="rec-timer" id="s3-timer">00:00</div>
+      <div class="recorder-status" id="s3-status">Press Record to start 🎙️</div>
+      <div class="recorder-controls">
+        <button class="btn btn-red btn-sm" onclick="startRec('s3')" id="s3-rec-btn">⏺ Record</button>
+        <button class="btn btn-gray btn-sm" onclick="stopRec('s3')" id="s3-stop-btn" disabled>⏹ Stop</button>
+      </div>
+      <audio id="s3-audio" class="audio-player" controls style="display:none"></audio>
+    </div>
+    <div class="rec-decision" id="s3-dec">
+      <p>🎧 Happy with it?</p><span class="heb">האם אתה מרוצה?</span>
+      <div class="rec-decision-btns">
+        <button class="btn btn-green btn-sm" onclick="keepRec('s3')">✅ Keep!</button>
+        <button class="btn btn-red btn-sm" onclick="reRec('s3')">🔄 Re-record</button>
+        <button class="btn btn-dark btn-sm" onclick="dlRec('s3')" id="s3-dl-btn">⬇ Download</button>
+      </div>
+    </div>
+    <div id="s3-speak-done" class="done-check" style="display:none">✅ Recording saved!</div>
+  </div>
+
+  <div class="task-card task-comp">
+    <div class="task-label">🧠 Comprehension <span class="heb">· הבנת הנקרא</span></div>
+    <h3>Answer the questions!</h3>
+    <div id="s3-mcq-container"></div>
+    <div id="s3-comp-done" class="done-check" style="display:none">✅ All correct!</div>
+  </div>
+
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 Listen Again <span class="heb">· האזנה שנייה</span></div>
+    <h3>Listen again before moving on!</h3>
+    <span class="heb-ins">חייב/ת להאזין שוב לפני המשך!</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s3-lp2"></div></div>
+    <div class="karaoke-text" id="s3-kar2"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s3b','s3-l2-done','s3-lp2')">🔊 Listen Again</button>
+    <div id="s3-l2-done" class="done-check" style="display:none">✅ Ready!</div>
+  </div>
+
+  <div class="task-card task-translate">
+    <div class="task-label">🌐 Translation <span class="heb">· תרגום</span></div>
+    <h3>Translate into Hebrew</h3>
+    <span class="heb-ins">תרגם/י את המשפט ולחץ/י על בדוק.</span>
+    <div class="translate-sentence">They are a perfect way to spend time with your family and friends.</div>
+    <textarea class="translate-input" id="s3-trans" placeholder="כתוב/י את התרגום כאן..."></textarea>
+    <button class="btn btn-pink" style="margin-top:9px" onclick="checkTrans('s3-trans','s3-trans-fb','s3',
+      ['הם דרך מושלמת לבלות זמן עם המשפחה והחברים שלך','זו דרך מושלמת לבלות זמן עם המשפחה והחברים','הם דרך מושלמת לבלות עם המשפחה ועם החברים','הם דרך נהדרת לבלות זמן עם המשפחה והחברים','זאת דרך מושלמת לבלות זמן עם המשפחה ועם החברים שלך','הם דרך מעולה לבלות זמן עם המשפחה והחברים'])">✔ Check / בדוק</button>
+    <div class="trans-feedback" id="s3-trans-fb"></div>
+    <div id="s3-trans-done" class="done-check" style="display:none">✅ Translation done!</div>
+  </div>
+  <div class="nav-buttons"><button class="btn btn-gray" onclick="goToSection(1)">← Back</button><button class="btn btn-red" onclick="nextSection(2)">Next →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 4 – My Experience
+══════════════════════════════════════════════════ -->
+<div class="section-page" id="section-3">
+  <div class="section-header">
+    <span class="section-num">Mission 04 · 18 Points</span>
+    <h2>📖 How Was My Experience? <small>איך הייתה החוויה שלי?</small></h2>
+    <div class="section-points">18 pts</div>
+  </div>
+
+  <div class="task-card task-vocab">
+    <div class="task-label">🧩 Vocabulary <span class="heb">· אוצר מילים</span></div>
+    <h3>Match the words!</h3>
+    <span class="heb-ins">לחץ/י על מילה באנגלית, ואחר כך על התרגום שלה בעברית.</span>
+    <div class="vocab-grid"><div class="vocab-col" id="s4-eng-col"></div><div class="vocab-col" id="s4-heb-col"></div></div>
+    <div id="s4-vocab-done" class="done-check" style="display:none">✅ Vocabulary done!</div>
+  </div>
+
+  <!-- SEQUENCE ORDERING MINI-GAME -->
+  <div class="task-card task-game">
+    <div class="task-label">🎮 Sequence Game <span class="heb">· משחק סדר</span></div>
+    <h3>Put the Events in Order! / סדר/י את האירועים!</h3>
+    <span class="heb-ins">גרור/י את האירועים לסדר הנכון לפי הסיפור. לחץ/י על ⬆⬇ להזזה.</span>
+    <div class="seq-game">
+      <div class="seq-items" id="s4-seq-list"></div>
+      <button class="btn btn-teal btn-sm" style="margin-top:12px" onclick="checkSeq('s4')">✔ Check Order / בדוק</button>
+    </div>
+    <div id="s4-game-done" class="done-check" style="display:none">✅ Sequence correct!</div>
+  </div>
+
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 First Listen <span class="heb">· האזנה ראשונה</span></div>
+    <h3>Listen and follow along!</h3>
+    <span class="heb-ins">הקשב/י לטקסט ועקוב/י אחרי המילים.</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s4-lp1"></div></div>
+    <div class="karaoke-text" id="s4-kar1"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s4a','s4-l1-done','s4-lp1')">🔊 Listen</button>
+    <div id="s4-l1-done" class="done-check" style="display:none">✅ Listened!</div>
+  </div>
+
+  <!-- CLOZE – exact text -->
+  <div class="task-card task-cloze">
+    <div class="task-label">✏️ Fill the Text <span class="heb">· מלא/י את הטקסט</span></div>
+    <h3>Complete the original text!</h3>
+    <span class="heb-ins">גרור/י את המילות המפתח לפערים בתוך הטקסט המקורי.</span>
+    <div class="tap-hint">👆 Tap a word, then tap a blank to place it / לחץ על מילה, אחר כך על הפער</div>
+    <div class="word-bank" id="s4-bank">
+      <div class="word-chip" draggable="true" data-word="imagined" ondragstart="dragStart(event)" onclick="selectChipTap(this)">imagined</div>
+      <div class="word-chip" draggable="true" data-word="afraid" ondragstart="dragStart(event)" onclick="selectChipTap(this)">afraid</div>
+      <div class="word-chip" draggable="true" data-word="locked" ondragstart="dragStart(event)" onclick="selectChipTap(this)">locked</div>
+      <div class="word-chip" draggable="true" data-word="cameras" ondragstart="dragStart(event)" onclick="selectChipTap(this)">cameras</div>
+      <div class="word-chip" draggable="true" data-word="brains" ondragstart="dragStart(event)" onclick="selectChipTap(this)">brains</div>
+      <div class="word-chip" draggable="true" data-word="wonderful" ondragstart="dragStart(event)" onclick="selectChipTap(this)">wonderful</div>
+    </div>
+    <div class="cloze-passage">
+      Last weekend, my family and I decided to go to an escape room. It was everything I <span class="blank" id="s4-b0" data-answer="imagined" ondragover="dragOver(event)" ondrop="dropWord(event,'s4','0')" onclick="clearBlank('s4','0')">_ _ _</span> and more. When we arrived, we met the game guide. At first, both of my little sisters were <span class="blank" id="s4-b1" data-answer="afraid" ondragover="dragOver(event)" ondrop="dropWord(event,'s4','1')" onclick="clearBlank('s4','1')">_ _ _</span> we wouldn't solve the mystery and escape. The game guide explained that we weren't really <span class="blank" id="s4-b2" data-answer="locked" ondragover="dragOver(event)" ondrop="dropWord(event,'s4','2')" onclick="clearBlank('s4','2')">_ _ _</span> in. He told us that he could see and hear us through <span class="blank" id="s4-b3" data-answer="cameras" ondragover="dragOver(event)" ondrop="dropWord(event,'s4','3')" onclick="clearBlank('s4','3')">_ _ _</span> and microphones, and that he was always available in case we needed help. He told us to use our <span class="blank" id="s4-b4" data-answer="brains" ondragover="dragOver(event)" ondrop="dropWord(event,'s4','4')" onclick="clearBlank('s4','4')">_ _ _</span> and have fun. Although my mom was clever and suggested we each look in a different area of the room, we didn't manage to find all the clues and escape on time. Our game guide opened the door and let us out, but that's fine. We still had a <span class="blank" id="s4-b5" data-answer="wonderful" ondragover="dragOver(event)" ondrop="dropWord(event,'s4','5')" onclick="clearBlank('s4','5')">_ _ _</span> experience and a chance to spend time together.
+    </div>
+    <button class="btn btn-orange" style="margin-top:12px" onclick="checkCloze('s4',6)">✔ Check / בדוק</button>
+    <div id="s4-cloze-done" class="done-check" style="display:none">✅ Text complete!</div>
+  </div>
+
+  <div class="task-card task-speak">
+    <div class="task-label">🎤 Speaking <span class="heb">· דיבור</span></div>
+    <h3>Record yourself reading!</h3>
+    <span class="heb-ins">קרא/י את הטקסט בקול ותקליט/י. אחר כך תחליט/י.</span>
+    <div class="reading-text" style="font-size:15px">Last weekend, my family and I decided to go to an escape room. It was everything I imagined and more. When we arrived, we met the game guide. At first, both of my little sisters were afraid we wouldn't solve the mystery and escape. The game guide explained that we weren't really locked in. He said we could immediately leave the room if we wanted to. He told us that he could see and hear us through cameras and microphones, and that he was always available in case we needed help. He told us to use our brains and have fun. Although my mom was clever and suggested we each look in a different area of the room, we didn't manage to find all the clues and escape on time. Our game guide opened the door and let us out, but that's fine. We still had a wonderful experience and a chance to spend time together.</div>
+    <div class="recorder-box">
+      <div class="rec-timer" id="s4-timer">00:00</div>
+      <div class="recorder-status" id="s4-status">Press Record to start 🎙️</div>
+      <div class="recorder-controls">
+        <button class="btn btn-red btn-sm" onclick="startRec('s4')" id="s4-rec-btn">⏺ Record</button>
+        <button class="btn btn-gray btn-sm" onclick="stopRec('s4')" id="s4-stop-btn" disabled>⏹ Stop</button>
+      </div>
+      <audio id="s4-audio" class="audio-player" controls style="display:none"></audio>
+    </div>
+    <div class="rec-decision" id="s4-dec">
+      <p>🎧 Happy with it?</p><span class="heb">האם אתה מרוצה?</span>
+      <div class="rec-decision-btns">
+        <button class="btn btn-green btn-sm" onclick="keepRec('s4')">✅ Keep!</button>
+        <button class="btn btn-red btn-sm" onclick="reRec('s4')">🔄 Re-record</button>
+        <button class="btn btn-dark btn-sm" onclick="dlRec('s4')" id="s4-dl-btn">⬇ Download</button>
+      </div>
+    </div>
+    <div id="s4-speak-done" class="done-check" style="display:none">✅ Recording saved!</div>
+  </div>
+
+  <div class="task-card task-comp">
+    <div class="task-label">🧠 Comprehension <span class="heb">· הבנת הנקרא</span></div>
+    <h3>Answer the questions!</h3>
+    <div id="s4-mcq-container"></div>
+    <div id="s4-comp-done" class="done-check" style="display:none">✅ All correct!</div>
+  </div>
+
+  <div class="task-card task-listen">
+    <div class="task-label">🎧 Listen Again <span class="heb">· האזנה שנייה</span></div>
+    <h3>Listen again before moving on!</h3>
+    <span class="heb-ins">חייב/ת להאזין שוב לפני המשך!</span>
+    <div class="listen-progress"><div class="listen-progress-fill" id="s4-lp2"></div></div>
+    <div class="karaoke-text" id="s4-kar2"></div>
+    <button class="btn btn-blue" onclick="startKaraoke('s4b','s4-l2-done','s4-lp2')">🔊 Listen Again</button>
+    <div id="s4-l2-done" class="done-check" style="display:none">✅ Ready!</div>
+  </div>
+
+  <div class="task-card task-translate">
+    <div class="task-label">🌐 Translation <span class="heb">· תרגום</span></div>
+    <h3>Translate into Hebrew</h3>
+    <span class="heb-ins">תרגם/י את המשפט ולחץ/י על בדוק.</span>
+    <div class="translate-sentence">We still had a wonderful experience and a chance to spend time together.</div>
+    <textarea class="translate-input" id="s4-trans" placeholder="כתוב/י את התרגום כאן..."></textarea>
+    <button class="btn btn-pink" style="margin-top:9px" onclick="checkTrans('s4-trans','s4-trans-fb','s4',
+      ['עדיין הייתה לנו חוויה נפלאה והזדמנות לבלות זמן ביחד','עדיין הייתה לנו חוויה נהדרת והזדמנות לבלות זמן ביחד','בכל זאת הייתה לנו חוויה נפלאה והזדמנות לבלות יחד','עדיין הייתה לנו חוויה מדהימה והזדמנות לבלות זמן ביחד','היה לנו עדיין ניסיון נפלא והזדמנות לבלות זמן ביחד','עדיין הייתה לנו חוויה נפלאה וסיכוי לבלות זמן ביחד'])">✔ Check / בדוק</button>
+    <div class="trans-feedback" id="s4-trans-fb"></div>
+    <div id="s4-trans-done" class="done-check" style="display:none">✅ Translation done!</div>
+  </div>
+  <div class="nav-buttons"><button class="btn btn-gray" onclick="goToSection(2)">← Back</button><button class="btn btn-red" onclick="nextSection(3)">Next →</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 5 – Final Games
+══════════════════════════════════════════════════ -->
+<div class="section-page" id="section-4">
+  <div class="section-header">
+    <span class="section-num">Mission 05 · 28 Points</span>
+    <h2>🏆 Final Games <small>משחקי סיום</small></h2>
+    <div class="section-points">28 pts</div>
+  </div>
+
+  <!-- WORD SEARCH -->
+  <div class="task-card task-game">
+    <div class="task-label">🔍 Word Search <span class="heb">· חיפוש מילים</span></div>
+    <h3>Find the hidden words! / מצא/י את המילות הנסתרות!</h3>
+    <span class="heb-ins">מצא/י את המילים מהטקסט בתוך הרשת. לחץ/י על אות ראשונה ואחרונה.</span>
+    <div id="s5-wsearch-container"></div>
+    <div id="s5-wsearch-done" class="done-check" style="display:none">✅ Word Search complete!</div>
+  </div>
+
+  <!-- TRUE/FALSE -->
+  <div class="task-card task-comp">
+    <div class="task-label">✅ True or False <span class="heb">· נכון או לא נכון</span></div>
+    <h3>True or false? Correct the false ones!</h3>
+    <span class="heb-ins">האם המשפטים נכונים? תקן/י את המשפטים השגויים!</span>
+    <div class="tf-item" id="tf0"><p>1. In an escape room, you have an hour to solve the mystery.</p><div class="tf-btns"><button class="tf-btn true-btn" onclick="checkTF(0,true,true)">TRUE ✓ / נכון</button><button class="tf-btn false-btn" onclick="checkTF(0,false,true)">FALSE ✗</button></div><div class="tf-correction" id="tf0-corr"><textarea placeholder="Write the correct sentence..."></textarea></div></div>
+    <div class="tf-item" id="tf1"><p>2. You can't move any of the furniture.</p><div class="tf-btns"><button class="tf-btn true-btn" onclick="checkTF(1,true,false)">TRUE ✓</button><button class="tf-btn false-btn" onclick="checkTF(1,false,false)">FALSE ✗ / לא נכון</button></div><div class="tf-correction" id="tf1-corr"><textarea placeholder="Correction / תיקון: You CAN move the furniture."></textarea></div></div>
+    <div class="tf-item" id="tf2"><p>3. It's a great way to meet new people.</p><div class="tf-btns"><button class="tf-btn true-btn" onclick="checkTF(2,true,true)">TRUE ✓ / נכון</button><button class="tf-btn false-btn" onclick="checkTF(2,false,true)">FALSE ✗</button></div><div class="tf-correction" id="tf2-corr"><textarea placeholder="Write the correct sentence..."></textarea></div></div>
+    <div class="tf-item" id="tf3"><p>4. There may be clues everywhere.</p><div class="tf-btns"><button class="tf-btn true-btn" onclick="checkTF(3,true,true)">TRUE ✓ / נכון</button><button class="tf-btn false-btn" onclick="checkTF(3,false,true)">FALSE ✗</button></div><div class="tf-correction" id="tf3-corr"><textarea placeholder="Write the correct sentence..."></textarea></div></div>
+    <div class="tf-item" id="tf4"><p>5. There are escape rooms only in Israel.</p><div class="tf-btns"><button class="tf-btn true-btn" onclick="checkTF(4,true,false)">TRUE ✓</button><button class="tf-btn false-btn" onclick="checkTF(4,false,false)">FALSE ✗ / לא נכון</button></div><div class="tf-correction" id="tf4-corr"><textarea placeholder="Correction: There are close to 5,000 rooms worldwide."></textarea></div></div>
+    <div id="s5-tf-done" class="done-check" style="display:none">✅ True/False complete!</div>
+  </div>
+
+  <!-- MATCHING -->
+  <div class="task-card task-comp">
+    <div class="task-label">🔗 Matching <span class="heb">· התאמה</span></div>
+    <h3>Match each heading to its description!</h3>
+    <span class="heb-ins">לחץ/י על כותרת, ואחר כך על המידע המתאים לה.</span>
+    <div class="match-container"><div class="match-col" id="s5-h-col"></div><div class="match-col" id="s5-i-col"></div></div>
+    <div id="s5-match-done" class="done-check" style="display:none">✅ Matching complete!</div>
+  </div>
+
+  <!-- WRITING -->
+  <div class="task-card task-write">
+    <div class="task-label">✍️ Writing <span class="heb">· כתיבה</span></div>
+    <h3>Why do you think escape rooms are so popular?</h3>
+    <span class="heb-ins">כתוב/י לפחות שני משפטים. כל משפט: אות גדולה בהתחלה + נקודה בסוף + לפחות 3 מילים.</span>
+    <div class="writing-wordbank">
+      <span class="writing-word">activity</span><span class="writing-word">chance</span><span class="writing-word">collect</span><span class="writing-word">competition</span><span class="writing-word">discover</span><span class="writing-word">great</span><span class="writing-word">have a good time</span><span class="writing-word">impossible</span><span class="writing-word">mystery</span><span class="writing-word">opportunity</span><span class="writing-word">perfect</span><span class="writing-word">puzzle</span><span class="writing-word">similar</span><span class="writing-word">solve</span><span class="writing-word">type</span>
+    </div>
+    <div style="background:#fffbeb;border-left:4px solid var(--accent);padding:9px 13px;border-radius:0 8px 8px 0;font-size:13px;margin-bottom:11px">💡 <em>Model: I think escape rooms are popular because they give you the opportunity to explore.</em></div>
+    <textarea class="writing-input" id="s5-writing" placeholder="Write your answer here..." oninput="checkWriting()"></textarea>
+    <div id="s5-sent-checks" style="margin-top:7px"></div>
+    <div style="font-size:13px;font-weight:700;color:#888;margin-top:5px">Valid sentences: <strong id="s5-sent-count">0</strong> / 2</div>
+    <div id="s5-writing-done" class="done-check" style="display:none">✅ Writing done!</div>
+  </div>
+
+  <!-- FINAL RECORDING -->
+  <div class="task-card task-speak">
+    <div class="task-label">🎤 Final Recording <span class="heb">· הקלטה סופית</span></div>
+    <h3>Choose a paragraph and record it!</h3>
+    <span class="heb-ins">בחר/י פסקה אחת וקרא/י אותה בקול. אחר כך תחליט/י אם לשמור.</span>
+    <div id="para-options">
+      <div class="para-option" onclick="selectPara(0)">📝 Paragraph 1 – What is an escape room? / מה זה חדר בריחה?</div>
+      <div class="para-option" onclick="selectPara(1)">🔍 Paragraph 2 – What do you do? / מה עושים?</div>
+      <div class="para-option" onclick="selectPara(2)">❓ Paragraph 3 – Why popular? / למה פופולרי?</div>
+      <div class="para-option" onclick="selectPara(3)">📖 Paragraph 4 – My experience? / החוויה שלי?</div>
+    </div>
+    <div id="s5-para-display" style="display:none"><div class="reading-text" id="s5-para-text" style="border:2px solid var(--red);font-size:15px;margin:12px 0"></div></div>
+    <div class="recorder-box">
+      <div class="rec-timer" id="s5-timer">00:00</div>
+      <div class="recorder-status" id="s5-status">Choose a paragraph first / בחר/י פסקה תחילה</div>
+      <div class="recorder-controls">
+        <button class="btn btn-red btn-sm" onclick="startRec('s5')" id="s5-rec-btn" disabled>⏺ Record</button>
+        <button class="btn btn-gray btn-sm" onclick="stopRec('s5')" id="s5-stop-btn" disabled>⏹ Stop</button>
+      </div>
+      <audio id="s5-audio" class="audio-player" controls style="display:none"></audio>
+    </div>
+    <div class="rec-decision" id="s5-dec">
+      <p>🎧 Happy with it?</p><span class="heb">האם אתה מרוצה?</span>
+      <div class="rec-decision-btns">
+        <button class="btn btn-green btn-sm" onclick="keepRec('s5')">✅ Keep!</button>
+        <button class="btn btn-red btn-sm" onclick="reRec('s5')">🔄 Re-record</button>
+        <button class="btn btn-dark btn-sm" onclick="dlRec('s5')" id="s5-dl-btn">⬇ Download</button>
+      </div>
+    </div>
+    <div id="s5-rec-done" class="done-check" style="display:none">✅ Final recording saved!</div>
+  </div>
+
+  <div class="nav-buttons"><button class="btn btn-gray" onclick="goToSection(3)">← Back</button><button class="btn btn-red" onclick="finishMission()" style="background:linear-gradient(135deg,var(--red),var(--hotpink))">🏁 Finish! / סיים!</button></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- FINAL PAGE (outside #main so hiding main doesn't hide this) -->
+<div id="final-page" style="display:none">
+  <div style="max-width:560px;margin:0 auto;padding:24px 20px;">
+
+    <!-- back button -->
+    <div style="margin-bottom:14px;">
+      <button onclick="goBackFromFinal()" style="background:#1e1e38;color:rgba(255,255,255,.8);border:2px solid rgba(255,255,255,.15);padding:10px 20px;border-radius:12px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s;" onmouseover="this.style.background='#2d2d50'" onmouseout="this.style.background='#1e1e38'">← Back to Missions / חזור למשימות</button>
+    </div>
+    <div style="text-align:center;background:linear-gradient(135deg,#1a0010,#2d0020 40%,#0a0a1f);border-radius:24px;padding:36px 24px 28px;margin-bottom:18px;border:3px solid var(--accent);position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(232,23,58,.2),transparent 60%),radial-gradient(ellipse at 70% 60%,rgba(255,230,0,.12),transparent 60%);"></div>
+      <div style="font-size:60px;margin-bottom:6px;position:relative">🎉🔐🎉</div>
+      <div style="font-family:'Bangers',cursive;font-size:clamp(38px,9vw,64px);color:var(--accent);letter-spacing:4px;line-height:1;text-shadow:3px 3px 0 var(--red);position:relative">GOOD JOB!</div>
+      <div style="font-family:'Bangers',cursive;font-size:clamp(18px,4vw,26px);color:white;letter-spacing:2px;margin-top:6px;position:relative">You Finished the Mission!</div>
+      <div style="color:rgba(255,220,0,.85);font-size:14px;direction:rtl;margin-top:6px;font-weight:700;position:relative">כל הכבוד! סיימת את המשימה! 🏆</div>
+    </div>
+
+    <!-- score card -->
+    <div style="background:white;border-radius:20px;padding:26px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.12);">
+      <div style="font-family:'Bangers',cursive;font-size:20px;letter-spacing:2px;color:var(--dark);margin-bottom:16px;text-align:center">📊 Here is your score: / הנה הציון שלך:</div>
+
+      <div style="background:#f4f4f8;border-radius:14px;padding:18px;">
+        <div style="display:flex;justify-content:space-between;padding:9px 0;font-size:15px;font-weight:700;border-bottom:1px solid #e5e7eb;color:#555">
+          <span>🎯 Raw Score</span><span id="final-raw" style="color:var(--dark);font-family:'Space Mono',monospace">0/100</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:9px 0;font-size:15px;font-weight:700;border-bottom:1px solid #e5e7eb;">
+          <span style="color:#555">⚠️ Penalties</span><span id="final-pen" style="color:var(--red);font-family:'Space Mono',monospace">−0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:11px 0 4px;font-size:18px;font-weight:900;">
+          <span style="color:var(--green)">✅ Net Score</span><span id="final-net" style="color:var(--green);font-family:'Space Mono',monospace"><strong>0</strong></span>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:14px;">
+        <div style="font-size:13px;color:#999;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">Final Grade / ציון סופי</div>
+        <div id="final-grade-big" style="font-family:'Bangers',cursive;font-size:88px;line-height:1;color:var(--red);letter-spacing:4px;text-shadow:3px 3px 0 rgba(232,23,58,.2)">−</div>
+        <div id="final-grade-msg" style="font-size:15px;font-weight:800;color:#555;margin-top:4px"></div>
+      </div>
+    </div>
+
+    <!-- actions card -->
+    <div style="background:white;border-radius:20px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.12);">
+      <div style="font-family:'Bangers',cursive;font-size:18px;letter-spacing:1px;color:var(--dark);margin-bottom:14px;text-align:center">📤 Send to Teacher / שלח למורה</div>
+
+      <!-- WhatsApp -->
+      <button onclick="sendWhatsApp()" style="width:100%;background:#25d366;color:white;padding:15px 20px;border-radius:14px;font-size:16px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;box-shadow:0 4px 14px rgba(37,211,102,.3);transition:all .2s" onmouseover="this.style.background='#1ebe5d'" onmouseout="this.style.background='#25d366'">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.132.557 4.133 1.528 5.874L.057 23.899l6.199-1.424A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.027-1.384l-.36-.214-3.732.857.897-3.617-.235-.371A9.818 9.818 0 0112 2.182c5.427 0 9.818 4.391 9.818 9.818 0 5.428-4.391 9.818-9.818 9.818z"/></svg>
+        📲 Send Score via WhatsApp / שלח ציון לוואטסאפ
+      </button>
+
+      <!-- Download final recording -->
+      <button onclick="dlFinalRec()" id="dl-final-rec-btn" style="width:100%;background:var(--blue);color:white;padding:14px 20px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:10px;box-shadow:0 4px 14px rgba(59,130,246,.3);transition:all .2s" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='var(--blue)'">
+        ⬇️ Download Final Recording / הורד הקלטה סופית
+      </button>
+      <div id="dl-rec-note" style="font-size:12px;color:#999;text-align:center;margin-bottom:14px">📎 After downloading, send the audio file via WhatsApp too. / לאחר ההורדה, שלח/י גם את קובץ האודיו בוואטסאפ.</div>
+      <div id="dl-rec-note-heb" style="font-size:11px;color:var(--red);font-weight:700;direction:rtl;text-align:center;margin-bottom:16px">שלח/י את ציונך + קובץ ההקלטה למורה!</div>
+
+      <button onclick="restartMission()" style="width:100%;background:#e5e7eb;color:#555;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;border:none;font-family:'Nunito',sans-serif;">🔄 Try Again / נסה שוב</button>
+    </div>
+
+  </div>
+</div><!-- /final-page -->
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════════════
+const VOCAB = {
+  s1:[{en:'adventure',he:'הרפתקה'},{en:'mystery',he:'מסתורין'},{en:'locked',he:'נעול'},{en:'puzzle',he:'חידה/פאזל'},{en:'clue',he:'רמז'}],
+  s2:[{en:'explore',he:'לחקור'},{en:'furniture',he:'רהיטים'},{en:'carpet',he:'שטיח'},{en:'ceiling',he:'תקרה'},{en:'drawer',he:'מגירה'}],
+  s3:[{en:'popular',he:'פופולרי'},{en:'team',he:'צוות'},{en:'solve',he:'לפתור'},{en:'surprise',he:'הפתעה'},{en:'perfect',he:'מושלם'}],
+  s4:[{en:'guide',he:'מדריך'},{en:'imagined',he:'דמיין'},{en:'available',he:'זמין'},{en:'brains',he:'מוחות'},{en:'wonderful',he:'נפלא'}],
+};
+
+const KTEXTS = {
+  s1a:"An escape room is a sixty-minute adventure game. You and your team are locked in a room. You have one hour to solve a mystery. In order to escape, you need to find the clues. Every clue is a piece of a puzzle that can help you escape.",
+  s1b:"An escape room is a sixty-minute adventure game. You and your team are locked in a room. You have one hour to solve a mystery. In order to escape, you need to find the clues. Every clue is a piece of a puzzle that can help you escape.",
+  s2a:"You explore everything in the room to find the clues that are hiding there. Everywhere you look, you might notice a clue to help you escape. For example, you move furniture, look under the carpet and examine the books on the shelves. You look closely at all the paintings on the wall. You can find a photo among objects in a drawer or a key under a lamp. There may even be puzzles that you have to solve. However, you have to hurry – you only have sixty minutes. The clock immediately starts counting down the minute you enter the escape room!",
+  s2b:"You explore everything in the room to find the clues that are hiding there. Everywhere you look, you might notice a clue to help you escape. For example, you move furniture, look under the carpet and examine the books on the shelves. You look closely at all the paintings on the wall. You can find a photo among objects in a drawer or a key under a lamp. There may even be puzzles that you have to solve. However, you have to hurry – you only have sixty minutes. The clock immediately starts counting down the minute you enter the escape room!",
+  s3a:"It's not a surprise escape rooms are so popular. They are a perfect way to spend time with your family and friends or just have fun. You have to work together as a team and work fast to solve the mystery and escape. When you and your team enter the escape room, you feel like you're in a movie. There are now close to five thousand escape rooms around the world! To choose an escape room near you and learn more about escape rooms, look us up online.",
+  s3b:"It's not a surprise escape rooms are so popular. They are a perfect way to spend time with your family and friends or just have fun. You have to work together as a team and work fast to solve the mystery and escape. When you and your team enter the escape room, you feel like you're in a movie. There are now close to five thousand escape rooms around the world! To choose an escape room near you and learn more about escape rooms, look us up online.",
+  s4a:"Last weekend, my family and I decided to go to an escape room. It was everything I imagined and more. When we arrived, we met the game guide. At first, both of my little sisters were afraid we wouldn't solve the mystery and escape. The game guide explained that we weren't really locked in. He said we could immediately leave the room if we wanted to. He told us that he could see and hear us through cameras and microphones, and that he was always available in case we needed help. He told us to use our brains and have fun. Although my mom was clever and suggested we each look in a different area of the room, we didn't manage to find all the clues and escape on time. Our game guide opened the door and let us out, but that's fine. We still had a wonderful experience and a chance to spend time together.",
+  s4b:"Last weekend, my family and I decided to go to an escape room. It was everything I imagined and more. When we arrived, we met the game guide. At first, both of my little sisters were afraid we wouldn't solve the mystery and escape. The game guide explained that we weren't really locked in. He said we could immediately leave the room if we wanted to. He told us that he could see and hear us through cameras and microphones, and that he was always available in case we needed help. He told us to use our brains and have fun. Although my mom was clever and suggested we each look in a different area of the room, we didn't manage to find all the clues and escape on time. Our game guide opened the door and let us out, but that's fine. We still had a wonderful experience and a chance to spend time together.",
+};
+
+const KMAP = {
+  s1a:'s1-kar1', s1b:'s1-kar2',
+  s2a:'s2-kar1', s2b:'s2-kar2',
+  s3a:'s3-kar1', s3b:'s3-kar2',
+  s4a:'s4-kar1', s4b:'s4-kar2',
+};
+
+const MCQ_DATA = {
+  s1:[
+    {q:"To win the game, you have to…",heb:"כדי לנצח, אתה צריך…",opts:["Stay in the room for an hour","Solve a mystery and escape","Find a key on the ceiling","Wait 60 minutes"],correct:1},
+    {q:"How long do you have to escape?",heb:"כמה זמן יש לך לברוח?",opts:["30 minutes","45 minutes","60 minutes","90 minutes"],correct:2},
+    {q:"What are clues in an escape room?",heb:"מה הם רמזים בחדר בריחה?",opts:["Keys to open the door","Prizes you win","Parts of a puzzle to help you escape","Secret messages from the guide"],correct:2},
+  ],
+  s2:[
+    {q:"What do you explore in the room?",heb:"מה אתה חוקר בחדר?",opts:["Only the paintings","Only the ceiling","Everything in the room","Only the carpet"],correct:2},
+    {q:"What do you look under?",heb:"מה אתה מסתכל מתחתיו?",opts:["The paintings","The carpet","The ceiling","The lamp"],correct:1},
+    {q:"What can you find in a drawer?",heb:"מה אפשר למצוא במגירה?",opts:["A key under a lamp","A puzzle","A photo","A clue on the ceiling"],correct:2},
+    {q:"Why do you look at the ceiling?",heb:"למה אתה מסתכל על התקרה?",opts:["It looks pretty","The door is there","There might be a clue there","The game guide told you to"],correct:2},
+  ],
+  s3:[
+    {q:"Why are escape rooms popular?",heb:"למה חדרי בריחה פופולריים?",opts:["They are very short","They are free","They are a perfect way to have fun and work as a team","They are easy to find"],correct:2},
+    {q:"How do you feel when you enter an escape room?",heb:"איך אתה מרגיש?",opts:["Like you're at school","Like you're in a movie","Like you're at home","Tired and bored"],correct:1},
+    {q:"An escape room is amazing because you use your brains AND you…",heb:"חדר בריחה מדהים כי אתה משתמש במוחות וגם…",opts:["spend a lot of money","take photos","work as a team","play alone"],correct:2},
+  ],
+  s4:[
+    {q:"What is one thing the game guide does?",heb:"מה עושה המדריך? (דבר ראשון)",opts:["Plays the game with you","Watches and listens through cameras","Gives you all the answers","Cleans the room"],correct:1},
+    {q:"What is another thing the game guide does?",heb:"מה עוד עושה המדריך?",opts:["Locks the door permanently","Gives hints after 10 minutes","Is available to help if you need it","Joins your team"],correct:2},
+    {q:"Did the family in the blog escape on time?",heb:"האם המשפחה הצליחה לברוח בזמן?",opts:["Yes, they escaped quickly","Yes, just in time","No, but they still had a wonderful time","No, and they were very sad"],correct:2},
+  ],
+};
+
+const PARA_TEXTS = [
+  "An escape room is a sixty-minute adventure game. You and your team are locked in a room. You have one hour to solve a mystery. In order to escape, you need to find the clues. Every clue is a piece of a puzzle that can help you escape.",
+  "You explore everything in the room to find the clues that are hiding there. Everywhere you look, you might notice a clue to help you escape. For example, you move furniture, look under the carpet and examine the books on the shelves. You look closely at all the paintings on the wall. You can find a photo among objects in a drawer or a key under a lamp. There may even be puzzles that you have to solve. However, you have to hurry – you only have sixty minutes. The clock immediately starts counting down the minute you enter the escape room!",
+  "It's not a surprise escape rooms are so popular. They are a perfect way to spend time with your family and friends or just have fun. You have to work together as a team and work fast to solve the mystery and escape. When you and your team enter the escape room, you feel like you're in a movie. There are now close to five thousand escape rooms around the world! To choose an escape room near you and learn more about escape rooms, look us up online.",
+  "Last weekend, my family and I decided to go to an escape room. It was everything I imagined and more. When we arrived, we met the game guide. At first, both of my little sisters were afraid we wouldn't solve the mystery and escape. The game guide explained that we weren't really locked in. He said we could immediately leave the room if we wanted to. He told us that he could see and hear us through cameras and microphones, and that he was always available in case we needed help. He told us to use our brains and have fun. Although my mom was clever and suggested we each look in a different area of the room, we didn't manage to find all the clues and escape on time. Our game guide opened the door and let us out, but that's fine. We still had a wonderful experience and a chance to spend time together."
+];
+
+// ════════════════════════════════════════════════════════
+// STATE + LOCALSTORAGE
+// ════════════════════════════════════════════════════════
+const SAVE_KEY = 'escape_room_v3';
+
+function defaultState() {
+  return {
+    name:'', rawScore:0, penalties:0, awarded:{}, completedTasks:{},
+    unlockedSections:[0], currentSection:0,
+    mcqAnswered:{}, tfAnswered:{}, matchMatched:0, matchSelected:null,
+    vocabSelected:{}, vocabMatched:{},
+    clozeState:{}, // prefix -> {idx:word}
+    translations:{}, writingText:'', writingDone:false,
+    recKept:{}, selectedPara:null,
+    scrambleIdx:{s1:0}, scrambleScores:{s1:0},
+    sortDone:{s2:false}, seqDone:{s4:false},
+    speedDone:{s3:false}, wsearchDone:false,
+  };
+}
+
+let S = defaultState();
+
+function saveState() {
+  try {
+    const toSave = Object.assign({}, S);
+    // don't save recordings (blobs)
+    localStorage.setItem(SAVE_KEY, JSON.stringify(toSave));
+  } catch(e){}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    const loaded = JSON.parse(raw);
+    S = Object.assign(defaultState(), loaded);
+  } catch(e){ S = defaultState(); }
+}
+
+function clearSave() {
+  localStorage.removeItem(SAVE_KEY);
+  window.location.reload();
+}
+
+// ════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function saveName(){ S.name=document.getElementById('student-name').value; saveState(); }
+let toastTO;
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='show';
+  if(type==='success') t.classList.add('success');
+  else if(type==='error') t.classList.add('error');
+  clearTimeout(toastTO);
+  toastTO=setTimeout(()=>{t.className='';},type==='error'?4000:2600);
+}
+
+// ════════════════════════════════════════════════════════
+// VOCAB MATCHING
+// ════════════════════════════════════════════════════════
+function buildVocab(prefix) {
+  const data=VOCAB[prefix];
+  const eCol=document.getElementById(`${prefix}-eng-col`);
+  const hCol=document.getElementById(`${prefix}-heb-col`);
+  if(!eCol||!hCol) return;
+  if(!S.vocabMatched[prefix]) S.vocabMatched[prefix]=0;
+  if(!S.vocabSelected[prefix]) S.vocabSelected[prefix]=null;
+  const shuffledEn=shuffle(data.map(d=>d.en));
+  const shuffledHe=shuffle(data.map(d=>d.he));
+  eCol.innerHTML=''; hCol.innerHTML='';
+  shuffledEn.forEach(w=>{
+    const d=document.createElement('div');
+    d.className='vocab-item'+(S.vocabMatched[prefix]===data.length?' matched':'');
+    d.textContent=w; d.dataset.word=w; d.dataset.lang='en';
+    d.onclick=()=>vocabClick(d,prefix); eCol.appendChild(d);
+  });
+  shuffledHe.forEach(h=>{
+    const en=data.find(x=>x.he===h).en;
+    const d=document.createElement('div');
+    d.className='vocab-item hebrew'+(S.vocabMatched[prefix]===data.length?' matched':'');
+    d.textContent=h; d.dataset.word=en; d.dataset.lang='he';
+    d.onclick=()=>vocabClick(d,prefix); hCol.appendChild(d);
+  });
+  // Restore matched state
+  if(S.completedTasks[`${prefix}_vocab`]) {
+    eCol.querySelectorAll('.vocab-item').forEach(el=>el.classList.add('matched'));
+    hCol.querySelectorAll('.vocab-item').forEach(el=>el.classList.add('matched'));
+    showDone(`${prefix}-vocab-done`);
+  }
+}
+
+function vocabClick(el,prefix){
+  if(el.classList.contains('matched')) return;
+  const prev=S.vocabSelected[prefix];
+  if(!prev){el.classList.add('selected');S.vocabSelected[prefix]=el;return;}
+  if(prev===el){el.classList.remove('selected');S.vocabSelected[prefix]=null;return;}
+  if(prev.dataset.word===el.dataset.word&&prev.dataset.lang!==el.dataset.lang){
+    [prev,el].forEach(e=>{e.classList.remove('selected');e.classList.add('matched');});
+    S.vocabSelected[prefix]=null;
+    S.vocabMatched[prefix]=(S.vocabMatched[prefix]||0)+1;
+    showToast('✅ Match! / התאמה!','success');
+    if(S.vocabMatched[prefix]===VOCAB[prefix].length){
+      markDone(`${prefix}-vocab-done`,prefix,'vocab',3);
+    }
+  } else {
+    [prev,el].forEach(e=>{e.classList.add('wrong');e.classList.remove('selected');});
+    S.vocabSelected[prefix]=null; applyPenalty();
+    showToast('❌ Try again!','error');
+    setTimeout(()=>[prev,el].forEach(e=>e.classList.remove('wrong')),600);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// MCQ – rendered dynamically with shuffled options
+// ════════════════════════════════════════════════════════
+function buildMCQ(prefix) {
+  const container=document.getElementById(`${prefix}-mcq-container`);
+  if(!container) return;
+  const questions=MCQ_DATA[prefix];
+  container.innerHTML='';
+  questions.forEach((q,qi)=>{
+    const qid=`${prefix}q${qi}`;
+    // Shuffle options but remember which is correct
+    const indexed=q.opts.map((o,i)=>({text:o,isCorrect:i===q.correct}));
+    const shuffled=shuffle(indexed);
+    const div=document.createElement('div');
+    div.className='quiz-question';
+    div.innerHTML=`<p>${qi+1}. ${q.q}</p><span class="heb-q">${q.heb}</span><div class="option-list" id="${qid}-opts"></div>`;
+    container.appendChild(div);
+    const optList=document.getElementById(`${qid}-opts`);
+    shuffled.forEach((opt,oi)=>{
+      const btn=document.createElement('button');
+      btn.className='option-btn';
+      btn.textContent=String.fromCharCode(97+oi)+') '+opt.text;
+      btn.onclick=()=>checkMCQ(btn,qid,opt.isCorrect,prefix,questions.length);
+      // Restore answered state
+      if(S.mcqAnswered[qid]){
+        btn.disabled=true;
+        if(opt.isCorrect) btn.classList.add('correct');
+      }
+      optList.appendChild(btn);
+    });
+  });
+  if(S.completedTasks[`${prefix}_comp`]) showDone(`${prefix}-comp-done`);
+}
+
+function checkMCQ(btn,qid,isCorrect,prefix,total){
+  if(S.mcqAnswered[qid]) return;
+  const opts=btn.closest('.option-list').querySelectorAll('.option-btn');
+  if(isCorrect){
+    btn.classList.add('correct'); opts.forEach(b=>b.disabled=true);
+    S.mcqAnswered[qid]=true; saveState();
+    showToast('✅ Correct! / נכון!','success');
+    // Check all done
+    let allDone=true;
+    for(let i=0;i<total;i++){if(!S.mcqAnswered[`${prefix}q${i}`]){allDone=false;break;}}
+    if(allDone) markDone(`${prefix}-comp-done`,prefix,'comp',5);
+  } else {
+    btn.classList.add('incorrect'); btn.disabled=true;
+    applyPenalty(); showToast('❌ Try another!','error');
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// KARAOKE / TTS
+// ════════════════════════════════════════════════════════
+function buildKaraoke(key) {
+  const el=document.getElementById(KMAP[key]);
+  if(!el) return;
+  const words=KTEXTS[key].split(/(\s+)/);
+  el.innerHTML=words.map((w,i)=>w.trim()?`<span class="karaoke-word" id="kw-${key}-${i}">${w}</span>`:w).join('');
+}
+
+function startKaraoke(key,doneId,progId){
+  // Mark as done immediately — listening is passive, no wrong answer possible.
+  // This also fixes mobile browsers where speechSynthesis.onend never fires.
+  const p=key.startsWith('s1')?'s1':key.startsWith('s2')?'s2':key.startsWith('s3')?'s3':'s4';
+  const isSecond=key.endsWith('b');
+  markDone(doneId,p,isSecond?'listen2':'listen1',isSecond?1:2);
+
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const text=KTEXTS[key];
+  if(!text) return;
+  const container=document.getElementById(KMAP[key]);
+  const prog=document.getElementById(progId);
+  if(!container) return;
+  container.querySelectorAll('.karaoke-word').forEach(e=>{e.classList.remove('active','done');});
+  const wordSpans=Array.from(container.querySelectorAll('.karaoke-word'));
+  const rawWords=text.split(/\s+/);
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US'; utt.rate=0.82; utt.pitch=1.08;
+  const voices=window.speechSynthesis.getVoices();
+  const pref=voices.find(v=>v.name.includes('Samantha')||v.name.includes('Karen')||v.name.includes('Daniel')||(v.lang==='en-US'&&v.name.includes('Google')));
+  if(pref) utt.voice=pref;
+  utt.onboundary=e=>{
+    if(e.name!=='word') return;
+    let cum=0;
+    for(let i=0;i<rawWords.length;i++){
+      cum+=rawWords[i].length+1;
+      if(e.charIndex<cum){
+        if(i>0&&wordSpans[i-1]){wordSpans[i-1].classList.remove('active');wordSpans[i-1].classList.add('done');}
+        if(wordSpans[i]){wordSpans[i].classList.add('active');wordSpans[i].scrollIntoView({behavior:'smooth',block:'nearest'});}
+        if(prog) prog.style.width=Math.round((i/rawWords.length)*100)+'%';
+        break;
+      }
+    }
+  };
+  utt.onend=()=>{
+    wordSpans.forEach(e=>{e.classList.remove('active');e.classList.add('done');});
+    if(prog) prog.style.width='100%';
+    showToast('✅ Great listening!','success');
+  };
+  window.speechSynthesis.speak(utt);
+}
+
+// ════════════════════════════════════════════════════════
+// CLOZE – DRAG + DROP
+// ════════════════════════════════════════════════════════
+let dragWord=null;
+let tapSelectedChip=null; // for mobile tap-to-place
+
+function selectChipTap(chipEl){
+  // Deselect if tapping same chip again
+  if(tapSelectedChip===chipEl){
+    chipEl.classList.remove('tap-selected');
+    tapSelectedChip=null;
+    clearTapReady();
+    return;
+  }
+  // Deselect previous
+  if(tapSelectedChip) tapSelectedChip.classList.remove('tap-selected');
+  tapSelectedChip=chipEl;
+  chipEl.classList.add('tap-selected');
+  // Highlight all unfilled blanks in same section
+  clearTapReady();
+  const prefix=chipEl.closest('.task-card').querySelector('.word-bank').id.replace('-bank','');
+  document.querySelectorAll(`[id^="${prefix}-b"]`).forEach(b=>{
+    if(b.dataset.filled!=='true') b.classList.add('tap-ready');
+  });
+}
+
+function placeTapWord(prefix,idx){
+  if(!tapSelectedChip) return; // no chip selected, behave as clear
+  const blank=document.getElementById(`${prefix}-b${idx}`);
+  if(!blank) return;
+  const word=tapSelectedChip.dataset.word;
+  if(blank.dataset.filled==='true') returnChip(prefix,blank.dataset.chosen);
+  useChip(prefix,word);
+  blank.textContent=word; blank.dataset.filled='true'; blank.dataset.chosen=word;
+  blank.classList.remove('wrong-fill','tap-ready'); blank.classList.add('filled');
+  if(!S.clozeState[prefix]) S.clozeState[prefix]={};
+  S.clozeState[prefix][idx]=word;
+  saveState();
+  tapSelectedChip.classList.remove('tap-selected');
+  tapSelectedChip=null;
+  clearTapReady();
+}
+
+function clearTapReady(){
+  document.querySelectorAll('.blank.tap-ready').forEach(b=>b.classList.remove('tap-ready'));
+}
+
+function dragStart(e){dragWord=e.target.dataset.word;e.dataTransfer.setData('text/plain',dragWord);}
+function dragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+document.addEventListener('dragleave',e=>{if(e.target.classList&&e.target.classList.contains('blank'))e.target.classList.remove('drag-over');});
+
+function dropWord(e,prefix,idx){
+  e.preventDefault();
+  const blank=e.currentTarget; blank.classList.remove('drag-over');
+  const word=e.dataTransfer.getData('text/plain')||dragWord;
+  if(!word) return;
+  if(blank.dataset.filled==='true') returnChip(prefix,blank.dataset.chosen);
+  useChip(prefix,word);
+  blank.textContent=word; blank.dataset.filled='true'; blank.dataset.chosen=word;
+  blank.classList.remove('wrong-fill','tap-ready'); blank.classList.add('filled');
+  if(!S.clozeState[prefix]) S.clozeState[prefix]={};
+  S.clozeState[prefix][idx]=word;
+  saveState(); dragWord=null;
+}
+
+function clearBlank(prefix,idx){
+  // If a chip is tap-selected, place it instead of clearing
+  if(tapSelectedChip){placeTapWord(prefix,idx);return;}
+  const b=document.getElementById(`${prefix}-b${idx}`);
+  if(!b||b.dataset.filled!=='true') return;
+  returnChip(prefix,b.dataset.chosen);
+  b.textContent='_ _ _'; b.dataset.filled='false'; b.dataset.chosen='';
+  b.classList.remove('filled','wrong-fill');
+  if(S.clozeState[prefix]) delete S.clozeState[prefix][idx];
+  saveState();
+}
+
+function shuffleWordBank(bankId){
+  const bank=document.getElementById(bankId);
+  if(!bank) return;
+  const chips=Array.from(bank.children);
+  for(let i=chips.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));bank.appendChild(chips[j]);}
+  // reorder: move all to temp array then append in shuffled order
+  const all=Array.from(bank.children);
+  const idxs=shuffle([...Array(all.length).keys()]);
+  idxs.forEach(i=>bank.appendChild(all[i]));
+}
+
+function useChip(prefix,word){
+  document.querySelectorAll(`#${prefix}-bank .word-chip`).forEach(c=>{if(c.dataset.word===word) c.classList.add('used');});
+}
+function returnChip(prefix,word){
+  document.querySelectorAll(`#${prefix}-bank .word-chip`).forEach(c=>{if(c.dataset.word===word) c.classList.remove('used');});
+}
+
+function checkCloze(prefix,count){
+  let allFilled=true, correct=0;
+  for(let i=0;i<count;i++){
+    const b=document.getElementById(`${prefix}-b${i}`);
+    if(!b) continue;
+    if(b.dataset.filled!=='true'){allFilled=false;continue;}
+    if(b.dataset.chosen===b.dataset.answer){b.classList.remove('wrong-fill');b.classList.add('filled');correct++;}
+    else{b.classList.add('wrong-fill');applyPenalty();}
+  }
+  if(!allFilled){showToast('⚠️ Fill all blanks first! / מלא/י את כל הפערים!','');return;}
+  if(correct===count){showToast('🎉 Perfect! / מושלם!','success');markDone(`${prefix}-cloze-done`,prefix,'cloze',4);}
+  else showToast(`${correct}/${count} correct. Try again!`,'error');
+}
+
+function restoreCloze(prefix,count){
+  if(!S.clozeState[prefix]) return;
+  Object.entries(S.clozeState[prefix]).forEach(([idx,word])=>{
+    const b=document.getElementById(`${prefix}-b${idx}`);
+    if(b){b.textContent=word;b.dataset.filled='true';b.dataset.chosen=word;b.classList.add('filled');useChip(prefix,word);}
+  });
+  if(S.completedTasks[`${prefix}_cloze`]) showDone(`${prefix}-cloze-done`);
+}
+
+// ════════════════════════════════════════════════════════
+// RECORDING
+// ════════════════════════════════════════════════════════
+const recData={};
+async function startRec(prefix){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const rec=new MediaRecorder(stream);
+    recData[prefix]={chunks:[],stream,recorder:rec};
+    rec.ondataavailable=e=>{if(e.data.size>0) recData[prefix].chunks.push(e.data);};
+    rec.onstop=()=>{
+      const blob=new Blob(recData[prefix].chunks,{type:'audio/webm'});
+      recData[prefix].blob=blob;
+      const url=URL.createObjectURL(blob);
+      const audio=document.getElementById(`${prefix}-audio`);
+      if(audio){audio.src=url;audio.style.display='block';audio.play();}
+      document.getElementById(`${prefix}-status`).textContent='🎧 Playing back... Listen and decide.';
+      document.getElementById(`${prefix}-status`).className='recorder-status';
+      clearInterval(recData[prefix].tmr);
+      document.getElementById(`${prefix}-rec-btn`).disabled=false;
+      document.getElementById(`${prefix}-stop-btn`).disabled=true;
+      recData[prefix].stream.getTracks().forEach(t=>t.stop());
+      document.getElementById(`${prefix}-dec`).style.display='block';
+    };
+    rec.start();
+    document.getElementById(`${prefix}-status`).textContent='🔴 Recording... / מקליט...';
+    document.getElementById(`${prefix}-status`).className='recorder-status recording';
+    document.getElementById(`${prefix}-rec-btn`).disabled=true;
+    document.getElementById(`${prefix}-stop-btn`).disabled=false;
+    let s=0;
+    recData[prefix].tmr=setInterval(()=>{s++;const m=String(Math.floor(s/60)).padStart(2,'0'),sec=String(s%60).padStart(2,'0');const el=document.getElementById(`${prefix}-timer`);if(el)el.textContent=`${m}:${sec}`;},1000);
+    showToast('🎙️ Recording started!','');
+  }catch(e){showToast('⚠️ Mic access denied. / אנא אשר/י מיקרופון.','error');}
+}
+function stopRec(prefix){const d=recData[prefix];if(d&&d.recorder&&d.recorder.state!=='inactive')d.recorder.stop();}
+function keepRec(prefix){
+  document.getElementById(`${prefix}-dec`).style.display='none';
+  S.recKept[prefix]=true; saveState();
+  showToast('✅ Saved! / נשמר!','success');
+  if(prefix==='s5'){markDone('s5-rec-done','s5','rec',7);}
+  else{markDone(`${prefix}-speak-done`,prefix,'speak',3);}
+}
+function reRec(prefix){
+  document.getElementById(`${prefix}-dec`).style.display='none';
+  const audio=document.getElementById(`${prefix}-audio`);
+  if(audio){audio.pause();audio.style.display='none';}
+  document.getElementById(`${prefix}-timer`).textContent='00:00';
+  document.getElementById(`${prefix}-status`).textContent='Press Record to start 🎙️';
+  S.recKept[prefix]=false; saveState();
+  showToast('🔄 Ready to re-record!','');
+}
+function dlRec(prefix){
+  const d=recData[prefix];
+  if(!d||!d.blob){showToast('⚠️ No recording yet!','error');return;}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(d.blob);
+  a.download=`recording_${prefix}_${S.name||'student'}.webm`;
+  a.click();
+  showToast('⬇ Downloading!','success');
+}
+
+// ════════════════════════════════════════════════════════
+// TRUE / FALSE
+// ════════════════════════════════════════════════════════
+function checkTF(idx,chosen,correct){
+  const key=`tf${idx}`;
+  if(S.tfAnswered[key]) return;
+  const item=document.getElementById(`tf${idx}`);
+  if(chosen===correct){
+    item.style.background='#f0fdf4';item.style.borderColor='var(--green)';
+    item.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);
+    S.tfAnswered[key]=true; saveState();
+    if(!correct) document.getElementById(`tf${idx}-corr`).style.display='block';
+    showToast('✅ Correct!','success');
+    let all=true;
+    for(let i=0;i<5;i++){if(!S.tfAnswered[`tf${i}`]){all=false;break;}}
+    if(all) markDone('s5-tf-done','s5','tf',7);
+  } else {
+    item.style.background='#fef2f2'; item.style.borderColor='var(--red)';
+    applyPenalty(); showToast('❌ Not right! / לא נכון!','error');
+    setTimeout(()=>{item.style.background='';item.style.borderColor='';},600);
+  }
+}
+
+function restoreTF(){
+  for(let i=0;i<5;i++){
+    if(S.tfAnswered[`tf${i}`]){
+      const item=document.getElementById(`tf${i}`);
+      if(item){item.style.background='#f0fdf4';item.style.borderColor='var(--green)';item.querySelectorAll('.tf-btn').forEach(b=>b.disabled=true);}
+    }
+  }
+  if(S.completedTasks['s5_tf']) showDone('s5-tf-done');
+}
+
+// ════════════════════════════════════════════════════════
+// MATCHING
+// ════════════════════════════════════════════════════════
+const MATCH={
+  h:['What is an escape room?','What do you do in an escape room?','Why do people like escape rooms?','How was my experience?'],
+  i:["It's an adventure game.","You look for clues to solve a mystery.","They're a good way to have fun.","It was wonderful."],
+  map:{"What is an escape room?":"It's an adventure game.","What do you do in an escape room?":"You look for clues to solve a mystery.","Why do people like escape rooms?":"They're a good way to have fun.","How was my experience?":"It was wonderful."}
+};
+let matchSel=null;
+
+function buildMatching(){
+  const hc=document.getElementById('s5-h-col'), ic=document.getElementById('s5-i-col');
+  if(!hc||!ic) return;
+  hc.innerHTML=''; ic.innerHTML='';
+  S.matchMatched=S.matchMatched||0;
+  shuffle(MATCH.h).forEach(h=>{
+    const d=document.createElement('div');
+    d.className='match-item'; d.textContent=h; d.dataset.value=h; d.dataset.type='heading';
+    d.onclick=()=>matchClick(d); hc.appendChild(d);
+  });
+  shuffle(MATCH.i).forEach(info=>{
+    const d=document.createElement('div');
+    d.className='match-item'; d.textContent=info; d.dataset.value=info; d.dataset.type='info';
+    d.onclick=()=>matchClick(d); ic.appendChild(d);
+  });
+  if(S.completedTasks['s5_match']) {
+    document.querySelectorAll('#s5-h-col .match-item,#s5-i-col .match-item').forEach(el=>el.classList.add('matched'));
+    showDone('s5-match-done');
+  }
+}
+
+function matchClick(el){
+  if(el.classList.contains('matched')) return;
+  const prev=matchSel;
+  if(!prev){el.classList.add('selected');matchSel=el;return;}
+  if(prev===el){el.classList.remove('selected');matchSel=null;return;}
+  if(prev.dataset.type===el.dataset.type){prev.classList.remove('selected');el.classList.add('selected');matchSel=el;return;}
+  const heading=prev.dataset.type==='heading'?prev.dataset.value:el.dataset.value;
+  const info=prev.dataset.type==='info'?prev.dataset.value:el.dataset.value;
+  if(MATCH.map[heading]===info){
+    [prev,el].forEach(e=>{e.classList.remove('selected');e.classList.add('matched');});
+    matchSel=null; S.matchMatched=(S.matchMatched||0)+1; saveState();
+    showToast('✅ Match!','success');
+    if(S.matchMatched===4) markDone('s5-match-done','s5','match',7);
+  } else {
+    [prev,el].forEach(e=>{e.classList.add('wrong');e.classList.remove('selected');});
+    matchSel=null; applyPenalty(); showToast('❌ Try again!','error');
+    setTimeout(()=>[prev,el].forEach(e=>e.classList.remove('wrong')),600);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// TRANSLATION CHECK
+// ════════════════════════════════════════════════════════
+function norm(s){
+  return s.trim()
+    .replace(/[\u0591-\u05C7]/g,'') // strip Hebrew niqqud/cantillation
+    .replace(/[.,!?;:״׳"""''״\-–]/g,'')
+    .replace(/\s+/g,' ')
+    .toLowerCase();
+}
+
+// Returns similarity 0–1 between two normalized strings based on shared words
+function wordSim(a,b){
+  const wa=new Set(a.split(' ').filter(w=>w.length>1));
+  const wb=new Set(b.split(' ').filter(w=>w.length>1));
+  if(!wa.size&&!wb.size) return 1;
+  let shared=0;
+  wa.forEach(w=>{if(wb.has(w)) shared++;});
+  return shared/Math.max(wa.size,wb.size);
+}
+
+function checkTrans(inputId,fbId,prefix,accepted){
+  const val=document.getElementById(inputId).value;
+  if(!val.trim()){showToast('⚠️ Write something first!','');return;}
+  const n=norm(val);
+  // Accept if: exact match OR word-overlap ≥55% with any accepted answer
+  const ok=accepted.some(a=>{
+    const na=norm(a);
+    return n===na || wordSim(n,na)>=0.55;
+  });
+  const fb=document.getElementById(fbId);
+  if(!fb) return;
+  fb.style.display='block';
+  if(ok){
+    fb.className='trans-feedback correct';
+    fb.innerHTML='✅ Excellent! Correct translation! / מעולה! תרגום נכון!';
+    S.translations[inputId]=val; saveState();
+    markDone(`${prefix}-trans-done`,prefix,'trans',3);
+  } else {
+    fb.className='trans-feedback incorrect';
+    fb.innerHTML='❌ Not quite. Try again! / לא בדיוק. נסה/י שוב!<br><small>💡 Tip: re-read the English sentence carefully and try again.</small>';
+    applyPenalty();
+  }
+}
+
+function restoreTranslations(){
+  Object.entries(S.translations).forEach(([id,val])=>{
+    const el=document.getElementById(id);
+    if(el) el.value=val;
+  });
+}
+
+// ════════════════════════════════════════════════════════
+// WRITING CHECK
+// ════════════════════════════════════════════════════════
+function checkWriting(){
+  const ta=document.getElementById('s5-writing');
+  const text=ta.value;
+  S.writingText=text; saveState();
+  const raw=text.trim();
+  const sentences=raw.split(/(?<=[.!?])\s+/).filter(s=>s.trim().length>0);
+  const checks=document.getElementById('s5-sent-checks');
+  let valid=0, html='';
+  sentences.forEach((sent,i)=>{
+    const t=sent.trim();
+    const words=t.split(/\s+/).filter(w=>w.length>0);
+    const ok_cap=/^[A-Z]/.test(t);
+    const ok_end=/[.!?]$/.test(t);
+    const ok_len=words.length>=3;
+    let issues=[];
+    if(!ok_cap) issues.push('Start with capital / התחל באות גדולה');
+    if(!ok_end) issues.push('End with . or ! / סיים בנקודה');
+    if(!ok_len) issues.push('At least 3 words / לפחות 3 מילים');
+    if(issues.length===0){valid++;html+=`<div class="sentence-ok">✅ Sentence ${i+1}: Good!</div>`;}
+    else html+=`<div class="sentence-bad">⚠️ Sentence ${i+1}: ${issues.join(' · ')}</div>`;
+  });
+  if(checks) checks.innerHTML=html;
+  document.getElementById('s5-sent-count').textContent=valid;
+  if(valid>=2&&!S.writingDone){
+    S.writingDone=true; saveState();
+    markDone('s5-writing-done','s5','writing',7);
+    showToast('✅ Great writing! / כתיבה מצוינת!','success');
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// PARA SELECTOR
+// ════════════════════════════════════════════════════════
+function selectPara(idx){
+  document.querySelectorAll('.para-option').forEach((el,i)=>el.classList.toggle('selected',i===idx));
+  S.selectedPara=idx; saveState();
+  document.getElementById('s5-para-text').textContent=PARA_TEXTS[idx];
+  document.getElementById('s5-para-display').style.display='block';
+  document.getElementById('s5-rec-btn').disabled=false;
+  document.getElementById('s5-status').textContent='Ready! Press Record 🎙️';
+}
+
+// ════════════════════════════════════════════════════════
+// MINI-GAME 1: WORD SCRAMBLE (S1)
+// ════════════════════════════════════════════════════════
+const SCRAMBLE_WORDS=[
+  {word:'adventure',hint:'הרפתקה – kind of game'},
+  {word:'mystery',hint:'מסתורין – something unknown'},
+  {word:'locked',hint:'נעול – can\'t open the door'},
+  {word:'puzzle',hint:'פאזל – pieces that fit together'},
+  {word:'escape',hint:'לברוח – to get out and be free'},
+];
+
+function scrambleWord(w){
+  const a=w.split('');
+  do{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}while(a.join('')===w);
+  return a.join('').toUpperCase();
+}
+
+function buildScramble(prefix){
+  if(!S.scrambleIdx[prefix]&&S.scrambleIdx[prefix]!==0) S.scrambleIdx[prefix]=0;
+  if(!S.scrambleScores[prefix]) S.scrambleScores[prefix]=0;
+  if(S.completedTasks[`${prefix}_game`]){showDone(`${prefix}-game-done`);return;}
+  showScrambleWord(prefix);
+}
+
+function showScrambleWord(prefix){
+  const idx=S.scrambleIdx[prefix]||0;
+  const words=SCRAMBLE_WORDS;
+  if(idx>=words.length){markDone(`${prefix}-game-done`,prefix,'game',2);return;}
+  const w=words[idx];
+  document.getElementById(`${prefix}-sc-word`).textContent=scrambleWord(w.word);
+  document.getElementById(`${prefix}-sc-hint`).textContent='💡 Hint: '+w.hint;
+  document.getElementById(`${prefix}-sc-cur`).textContent=idx+1;
+  document.getElementById(`${prefix}-sc-cur2`).textContent=idx+1;
+  document.getElementById(`${prefix}-sc-tot`).textContent=words.length;
+  document.getElementById(`${prefix}-sc-tot2`).textContent=words.length;
+  const inp=document.getElementById(`${prefix}-sc-input`);
+  if(inp){inp.value='';inp.focus();}
+  document.getElementById(`${prefix}-sc-result`).textContent='';
+}
+
+function checkScramble(prefix){
+  const idx=S.scrambleIdx[prefix]||0;
+  const inp=document.getElementById(`${prefix}-sc-input`);
+  if(!inp) return;
+  const val=inp.value.trim().toLowerCase();
+  const correct=SCRAMBLE_WORDS[idx].word.toLowerCase();
+  if(val===correct){
+    document.getElementById(`${prefix}-sc-result`).textContent='✅ Correct! / נכון!';
+    document.getElementById(`${prefix}-sc-result`).style.color='var(--green)';
+    showToast('🎉 '+correct+'!','success');
+    S.scrambleIdx[prefix]=(S.scrambleIdx[prefix]||0)+1;
+    S.scrambleScores[prefix]=(S.scrambleScores[prefix]||0)+1;
+    saveState();
+    setTimeout(()=>showScrambleWord(prefix),700);
+    if(S.scrambleIdx[prefix]>=SCRAMBLE_WORDS.length) setTimeout(()=>markDone(`${prefix}-game-done`,prefix,'game',2),800);
+  }
+}
+
+function skipScramble(prefix){
+  S.scrambleIdx[prefix]=(S.scrambleIdx[prefix]||0)+1;
+  saveState();
+  if(S.scrambleIdx[prefix]>=SCRAMBLE_WORDS.length) markDone(`${prefix}-game-done`,prefix,'game',2);
+  else showScrambleWord(prefix);
+}
+
+// ════════════════════════════════════════════════════════
+// MINI-GAME 2: WORD SORT (S2)
+// ════════════════════════════════════════════════════════
+const SORT_WORDS=[
+  {word:'photo',zone:'find'},{word:'key',zone:'find'},{word:'clue',zone:'find'},
+  {word:'furniture',zone:'move'},{word:'carpet',zone:'move'},{word:'paintings',zone:'move'},
+];
+let sortDragWord=null;
+
+function buildSort(prefix){
+  const pool=document.getElementById(`${prefix}-sort-pool`);
+  if(!pool) return;
+  if(S.completedTasks[`${prefix}_game`]){showDone(`${prefix}-game-done`);return;}
+  pool.innerHTML='';
+  SORT_WORDS.forEach(sw=>{
+    const chip=document.createElement('div');
+    chip.className='sort-chip'; chip.textContent=sw.word; chip.dataset.word=sw.word; chip.dataset.zone=sw.zone;
+    chip.draggable=true;
+    chip.ondragstart=e=>{sortDragWord=sw;e.dataTransfer.setData('text/plain',sw.word);};
+    pool.appendChild(chip);
+  });
+}
+
+function sortZoneDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function sortPoolDrop(e,poolId){
+  e.preventDefault();
+  document.getElementById(poolId).classList.remove('drag-over');
+  // return to pool (handled by zone drop returning items)
+}
+
+function sortZoneDrop(e,zoneId,zone){
+  e.preventDefault();
+  const zoneEl=document.getElementById(zoneId);
+  zoneEl.classList.remove('drag-over');
+  if(!sortDragWord) return;
+  const placed=zoneEl.querySelector('.sort-placed');
+  // Remove from pool
+  const chip=document.querySelector(`#s2-sort-pool [data-word="${sortDragWord.word}"]`);
+  if(chip) chip.classList.add('placed');
+  // Add to zone
+  const item=document.createElement('div');
+  item.className='sort-placed-item neutral';
+  item.textContent=sortDragWord.word;
+  item.dataset.word=sortDragWord.word;
+  item.dataset.zone=zone;
+  item.onclick=()=>{
+    item.remove();
+    if(chip) chip.classList.remove('placed');
+  };
+  placed.appendChild(item);
+  sortDragWord=null;
+}
+
+function checkSort(prefix){
+  let correct=0,total=SORT_WORDS.length;
+  const findItems=document.querySelectorAll('#s2-placed-find .sort-placed-item');
+  const moveItems=document.querySelectorAll('#s2-placed-move .sort-placed-item');
+  [...findItems,...moveItems].forEach(item=>{
+    const word=item.dataset.word;
+    const expectedZone=SORT_WORDS.find(s=>s.word===word)?.zone;
+    if(item.dataset.zone===expectedZone){item.classList.remove('neutral','incorrect');item.classList.add('correct');correct++;}
+    else{item.classList.remove('neutral','correct');item.classList.add('incorrect');applyPenalty();}
+  });
+  if(correct===total){showToast('🎯 Perfect sort! / מיון מושלם!','success');markDone(`${prefix}-game-done`,prefix,'game',2);}
+  else showToast(`${correct}/${total} correct. / נכון. Keep trying!`,'error');
+}
+
+// ════════════════════════════════════════════════════════
+// MINI-GAME 3: SPEED QUIZ (S3)
+// ════════════════════════════════════════════════════════
+const SPEED_Qs=[
+  {q:"How many escape rooms are there worldwide?",heb:"כמה חדרי בריחה יש בעולם?",opts:["About 500","Close to 5,000","Over 50,000","Just 50"],correct:1},
+  {q:"What do you feel like when you enter an escape room?",heb:"כמה אתה מרגיש?",opts:["Bored","Tired","Like you're in a movie","Like you're at school"],correct:2},
+  {q:"Escape rooms are a ___ way to spend time with friends.",heb:"חדרי בריחה הם דרך ___ לבלות עם חברים.",opts:["terrible","boring","perfect","ordinary"],correct:2},
+  {q:"You have to work together as a…",heb:"אתה צריך לעבוד יחד כ...",opts:["pair","team","class","family"],correct:1},
+];
+let speedTimer=null, speedQ=0, speedScore=0, speedStreak=0;
+
+function startSpeedQuiz(prefix){
+  speedQ=0; speedScore=0; speedStreak=0;
+  document.getElementById('s3-sq-start-btn').style.display='none';
+  showSpeedQ(prefix);
+}
+
+function showSpeedQ(prefix){
+  if(speedQ>=SPEED_Qs.length){
+    document.getElementById('s3-sq-text').textContent=`Done! Score: ${speedScore}/${SPEED_Qs.length} 🎉`;
+    document.getElementById('s3-sq-heb').textContent=`סיימת! ציון: ${speedScore}/${SPEED_Qs.length}`;
+    document.getElementById('s3-sq-opts').innerHTML='';
+    markDone(`${prefix}-game-done`,prefix,'game',2);
+    return;
+  }
+  const q=SPEED_Qs[speedQ];
+  const shuffled=shuffle(q.opts.map((o,i)=>({text:o,correct:i===q.correct})));
+  document.getElementById('s3-sq-text').textContent=`${speedQ+1}. ${q.q}`;
+  document.getElementById('s3-sq-heb').textContent=q.heb;
+  const opts=document.getElementById('s3-sq-opts');
+  opts.innerHTML='';
+  shuffled.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='speed-opt'; btn.textContent=opt.text;
+    btn.onclick=()=>answerSpeed(btn,opt.correct,prefix);
+    opts.appendChild(btn);
+  });
+  // Timer
+  clearInterval(speedTimer);
+  let pct=100;
+  const fill=document.getElementById('s3-sq-timer-fill');
+  if(fill) fill.style.width='100%';
+  speedTimer=setInterval(()=>{
+    pct-=2;
+    if(fill) fill.style.width=pct+'%';
+    if(pct<=0){clearInterval(speedTimer);timeUpSpeed(prefix);}
+  },150);
+}
+
+function answerSpeed(btn,correct,prefix){
+  clearInterval(speedTimer);
+  document.getElementById('s3-sq-opts').querySelectorAll('.speed-opt').forEach(b=>b.disabled=true);
+  if(correct){
+    btn.classList.add('correct'); speedScore++; speedStreak++;
+    document.getElementById('s3-sq-streak').textContent='🔥'+speedStreak;
+    document.getElementById('s3-sq-score').textContent=speedScore;
+    showToast('⚡ Correct!','success');
+  } else {
+    btn.classList.add('incorrect'); speedStreak=0;
+    document.getElementById('s3-sq-streak').textContent='🔥0';
+    applyPenalty(); showToast('❌ Wrong!','error');
+    // highlight correct
+    document.getElementById('s3-sq-opts').querySelectorAll('.speed-opt').forEach(b=>{if(!b.classList.contains('incorrect'))b.classList.add('correct');});
+  }
+  speedQ++;
+  setTimeout(()=>showSpeedQ(prefix),900);
+}
+
+function timeUpSpeed(prefix){
+  document.getElementById('s3-sq-text').textContent='⏰ Time\'s up! / נגמר הזמן!';
+  document.getElementById('s3-sq-opts').innerHTML='';
+  speedStreak=0; applyPenalty(); speedQ++;
+  setTimeout(()=>showSpeedQ(prefix),800);
+}
+
+// ════════════════════════════════════════════════════════
+// MINI-GAME 4: SEQUENCE (S4)
+// ════════════════════════════════════════════════════════
+const SEQ_EVENTS=[
+  {text:"The family decided to go to an escape room.",order:0},
+  {text:"They arrived and met the game guide.",order:1},
+  {text:"The guide explained they could leave if they wanted.",order:2},
+  {text:"He told them to use their brains and have fun.",order:3},
+  {text:"They didn't escape on time, but had a wonderful experience.",order:4},
+];
+
+function buildSeq(prefix){
+  const list=document.getElementById(`${prefix}-seq-list`);
+  if(!list) return;
+  if(S.completedTasks[`${prefix}_game`]){showDone(`${prefix}-game-done`);return;}
+  const shuffled=shuffle([...SEQ_EVENTS]);
+  list.innerHTML='';
+  shuffled.forEach((ev,i)=>{
+    const item=document.createElement('div');
+    item.className='seq-item'; item.dataset.order=ev.order;
+    item.innerHTML=`<span class="num">${i+1}</span><span style="flex:1">${ev.text}</span>`;
+    const btns=document.createElement('div');
+    btns.style.cssText='display:flex;flex-direction:column;gap:3px;margin-left:8px;';
+    const u=document.createElement('button');
+    u.textContent='⬆'; u.title='Move up';
+    u.style.cssText='padding:2px 8px;border-radius:5px;border:1px solid #ccc;cursor:pointer;background:#f4f4f8;font-size:12px;line-height:1.4;';
+    u.onclick=()=>{const prev=item.previousElementSibling;if(prev){list.insertBefore(item,prev);updateSeqNums(list);}};
+    const d=document.createElement('button');
+    d.textContent='⬇'; d.title='Move down';
+    d.style.cssText='padding:2px 8px;border-radius:5px;border:1px solid #ccc;cursor:pointer;background:#f4f4f8;font-size:12px;line-height:1.4;';
+    d.onclick=()=>{const next=item.nextElementSibling;if(next){list.insertBefore(next,item);updateSeqNums(list);}};
+    btns.appendChild(u); btns.appendChild(d);
+    item.appendChild(btns);
+    list.appendChild(item);
+  });
+}
+
+function updateSeqNums(list){
+  list.querySelectorAll('.seq-item .num').forEach((n,i)=>n.textContent=i+1);
+}
+
+function checkSeq(prefix){
+  const list=document.getElementById(`${prefix}-seq-list`);
+  const items=list.querySelectorAll('.seq-item');
+  let correct=0;
+  items.forEach((item,i)=>{
+    const expectedOrder=parseInt(item.dataset.order);
+    if(expectedOrder===i){item.classList.add('correct-pos');item.classList.remove('wrong-pos');correct++;}
+    else{item.classList.add('wrong-pos');item.classList.remove('correct-pos');applyPenalty();}
+  });
+  if(correct===items.length){showToast('🎯 Perfect order! / סדר מושלם!','success');markDone(`${prefix}-game-done`,prefix,'game',2);}
+  else showToast(`${correct}/${items.length} in the right place!`,'error');
+}
+
+// ════════════════════════════════════════════════════════
+// MINI-GAME 5: WORD SEARCH (S5)
+// ════════════════════════════════════════════════════════
+const WS_WORDS=['CLUE','ESCAPE','TEAM','LOCKED','MYSTERY','PUZZLE','GUIDE','CARPET'];
+
+function buildWordSearch(){
+  const container=document.getElementById('s5-wsearch-container');
+  if(!container) return;
+  if(S.completedTasks['s5_wsearch']){showDone('s5-wsearch-done');return;}
+
+  // 10x10 grid
+  const SIZE=10;
+  const grid=Array.from({length:SIZE},()=>Array(SIZE).fill(''));
+  const placed=[];
+
+  function placeWord(word){
+    const dirs=[[0,1],[1,0],[1,1]];
+    for(let attempts=0;attempts<100;attempts++){
+      const dir=dirs[Math.floor(Math.random()*dirs.length)];
+      const r=Math.floor(Math.random()*SIZE);
+      const c=Math.floor(Math.random()*SIZE);
+      let ok=true;
+      for(let i=0;i<word.length;i++){
+        const nr=r+dir[0]*i,nc=c+dir[1]*i;
+        if(nr<0||nr>=SIZE||nc<0||nc>=SIZE){ok=false;break;}
+        if(grid[nr][nc]!==''&&grid[nr][nc]!==word[i]){ok=false;break;}
+      }
+      if(ok){
+        const cells=[];
+        for(let i=0;i<word.length;i++){
+          const nr=r+dir[0]*i,nc=c+dir[1]*i;
+          grid[nr][nc]=word[i];
+          cells.push({r:nr,c:nc});
+        }
+        placed.push({word,cells});
+        return true;
+      }
+    }
+    return false;
+  }
+
+  WS_WORDS.forEach(w=>placeWord(w));
+  const ALPHA='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) if(!grid[r][c]) grid[r][c]=ALPHA[Math.floor(Math.random()*26)];
+
+  let selStart=null, selecting=[], foundWords=new Set();
+
+  const gridEl=document.createElement('div');
+  gridEl.className='wsearch-grid';
+  gridEl.style.gridTemplateColumns=`repeat(${SIZE},32px)`;
+
+  const cells=[];
+  for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
+    const cell=document.createElement('div');
+    cell.className='wsearch-cell'; cell.textContent=grid[r][c];
+    cell.dataset.r=r; cell.dataset.c=c;
+    cell.onmousedown=()=>{selStart={r,c};selecting=[{r,c}];cell.classList.add('selecting');};
+    cell.onmouseenter=()=>{
+      if(!selStart) return;
+      selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.remove('selecting'));
+      selecting=[{r:selStart.r,c:selStart.c}];
+      // line from selStart to current
+      const dr=r-selStart.r, dc=c-selStart.c;
+      const len=Math.max(Math.abs(dr),Math.abs(dc));
+      if(len>0){
+        const sr=dr/len===0?0:(dr/Math.abs(dr));
+        const sc=dc/len===0?0:(dc/Math.abs(dc));
+        // only allow H/V/D
+        if(Math.abs(dr)===Math.abs(dc)||dr===0||dc===0){
+          for(let i=1;i<=len;i++) selecting.push({r:selStart.r+sr*i,c:selStart.c+sc*i});
+        }
+      }
+      selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.add('selecting'));
+    };
+    cell.onmouseup=()=>{
+      const word=selecting.map(s=>grid[s.r][s.c]).join('');
+      const wordRev=word.split('').reverse().join('');
+      const match=placed.find(p=>p.word===word||p.word===wordRev);
+      if(match&&!foundWords.has(match.word)){
+        foundWords.add(match.word);
+        selecting.forEach(s=>{const cl=cells[s.r*SIZE+s.c];cl.classList.remove('selecting');cl.classList.add('found');});
+        document.querySelectorAll('.wsearch-word').forEach(el=>{if(el.dataset.word===match.word) el.classList.add('found-word');});
+        showToast('🔍 Found: '+match.word,'success');
+        if(foundWords.size===WS_WORDS.length) markDone('s5-wsearch-done','s5','wsearch',0);
+      } else {
+        selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.remove('selecting'));
+      }
+      selStart=null; selecting=[];
+    };
+    cells.push(cell); gridEl.appendChild(cell);
+  }
+
+  document.addEventListener('mouseup',()=>{
+    if(!selStart) return;
+    selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.remove('selecting'));
+    selStart=null; selecting=[];
+  });
+
+  const wordsEl=document.createElement('div');
+  wordsEl.className='wsearch-words';
+  WS_WORDS.forEach(w=>{
+    const span=document.createElement('span');
+    span.className='wsearch-word'; span.textContent=w; span.dataset.word=w;
+    wordsEl.appendChild(span);
+  });
+
+  const wrap=document.createElement('div');
+  wrap.className='wsearch-grid-wrap';
+  wrap.appendChild(gridEl);
+  container.appendChild(wrap);
+  container.appendChild(wordsEl);
+
+  // Touch support for mobile
+  let touchActive=false;
+  gridEl.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    const el=document.elementFromPoint(t.clientX,t.clientY);
+    if(el&&el.classList.contains('wsearch-cell')){
+      const r=+el.dataset.r,c=+el.dataset.c;
+      selStart={r,c};selecting=[{r,c}];el.classList.add('selecting');touchActive=true;
+    }
+  },{passive:false});
+  gridEl.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(!touchActive||!selStart) return;
+    const t=e.touches[0];
+    const el=document.elementFromPoint(t.clientX,t.clientY);
+    if(el&&el.classList.contains('wsearch-cell')){
+      const r=+el.dataset.r,c=+el.dataset.c;
+      selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.remove('selecting'));
+      selecting=[{r:selStart.r,c:selStart.c}];
+      const dr=r-selStart.r,dc=c-selStart.c;
+      const len=Math.max(Math.abs(dr),Math.abs(dc));
+      if(len>0){
+        const sr=dr/len===0?0:(dr/Math.abs(dr));
+        const sc=dc/len===0?0:(dc/Math.abs(dc));
+        if(Math.abs(dr)===Math.abs(dc)||dr===0||dc===0){
+          for(let i=1;i<=len;i++) selecting.push({r:selStart.r+sr*i,c:selStart.c+sc*i});
+        }
+      }
+      selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.add('selecting'));
+    }
+  },{passive:false});
+  gridEl.addEventListener('touchend',e=>{
+    e.preventDefault();
+    if(!touchActive) return;
+    const word=selecting.map(s=>grid[s.r][s.c]).join('');
+    const wordRev=word.split('').reverse().join('');
+    const match=placed.find(p=>p.word===word||p.word===wordRev);
+    if(match&&!foundWords.has(match.word)){
+      foundWords.add(match.word);
+      selecting.forEach(s=>{const cl=cells[s.r*SIZE+s.c];cl.classList.remove('selecting');cl.classList.add('found');});
+      document.querySelectorAll('.wsearch-word').forEach(el=>{if(el.dataset.word===match.word) el.classList.add('found-word');});
+      showToast('🔍 Found: '+match.word,'success');
+      if(foundWords.size===WS_WORDS.length) markDone('s5-wsearch-done','s5','wsearch',0);
+    } else {
+      selecting.forEach(s=>cells[s.r*SIZE+s.c].classList.remove('selecting'));
+    }
+    selStart=null;selecting=[];touchActive=false;
+  },{passive:false});
+}
+
+// ════════════════════════════════════════════════════════
+// SCORING + DONE
+// ════════════════════════════════════════════════════════
+function markDone(doneId,prefix,task,pts){
+  showDone(doneId);
+  if(prefix&&task){
+    S.completedTasks[`${prefix}_${task}`]=true;
+  }
+  if(pts>0) award(prefix,task,pts);
+  updateProgress();
+  saveState();
+}
+
+function showDone(id){
+  const el=document.getElementById(id);
+  if(el) el.style.display='inline-flex';
+}
+
+function award(prefix,task,pts){
+  const key=`${prefix}_${task}`;
+  if(S.awarded[key]) return;
+  S.awarded[key]=true;
+  S.rawScore=Math.min(100,S.rawScore+pts);
+  updateScoreDisplay();
+  saveState();
+}
+
+function applyPenalty(){
+  S.penalties+=0.5;
+  updateScoreDisplay();
+  saveState();
+}
+
+function updateScoreDisplay(){
+  const net=Math.max(0,S.rawScore-S.penalties);
+  document.getElementById('disp-raw').textContent=S.rawScore.toFixed(0);
+  document.getElementById('disp-pen').textContent=S.penalties.toFixed(1);
+  document.getElementById('disp-net').textContent=net.toFixed(1);
+  document.getElementById('disp-grade').textContent=getGrade(net);
+}
+
+function getGrade(s){
+  if(s>=95)return'A+';if(s>=88)return'A';if(s>=80)return'B+';
+  if(s>=73)return'B';if(s>=65)return'C+';if(s>=55)return'C';
+  if(s>=45)return'D';return'F';
+}
+
+function updateProgress(){
+  const done=Object.keys(S.completedTasks).length;
+  const max=36;
+  document.getElementById('progress-fill').style.width=Math.min(100,Math.round(done/max*100))+'%';
+}
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+function goToSection(idx){
+  if(idx>0&&!S.unlockedSections.includes(idx)){showToast('🔒 Complete this section first!','error');return;}
+  S.currentSection=idx;
+  document.querySelectorAll('.section-page').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.querySelectorAll('.nav-tab').forEach((tab,i)=>{
+    tab.classList.remove('active');
+    if(i===idx) tab.classList.add('active');
+    if(S.unlockedSections.includes(i)) tab.classList.add('unlocked');
+  });
+  saveState();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+const SECTION_TASKS={
+  0:['s1_vocab','s1_game','s1_listen1','s1_cloze','s1_speak','s1_comp','s1_listen2','s1_trans'],
+  1:['s2_vocab','s2_game','s2_listen1','s2_cloze','s2_speak','s2_comp','s2_listen2','s2_trans'],
+  2:['s3_vocab','s3_game','s3_listen1','s3_cloze','s3_speak','s3_comp','s3_listen2','s3_trans'],
+  3:['s4_vocab','s4_game','s4_listen1','s4_cloze','s4_speak','s4_comp','s4_listen2','s4_trans'],
+  4:['s5_wsearch','s5_tf','s5_match','s5_writing','s5_rec'],
+};
+const TASK_LABELS={
+  vocab:'🧩 Vocabulary',game:'🎮 Mini-game',
+  listen1:'🎧 First listen',listen2:'🎧 Listen again',
+  cloze:'✏️ Fill the text',speak:'🎤 Recording',
+  comp:'🧠 Comprehension',trans:'🌐 Translation',
+  wsearch:'🔍 Word search',tf:'✅ True/False',
+  match:'🔗 Matching',writing:'✍️ Writing',rec:'🎤 Final recording',
+};
+const DONE_ID_MAP={
+  s1_vocab:'s1-vocab-done',s1_game:'s1-game-done',s1_listen1:'s1-l1-done',
+  s1_cloze:'s1-cloze-done',s1_speak:'s1-speak-done',s1_comp:'s1-comp-done',
+  s1_listen2:'s1-l2-done',s1_trans:'s1-trans-done',
+  s2_vocab:'s2-vocab-done',s2_game:'s2-game-done',s2_listen1:'s2-l1-done',
+  s2_cloze:'s2-cloze-done',s2_speak:'s2-speak-done',s2_comp:'s2-comp-done',
+  s2_listen2:'s2-l2-done',s2_trans:'s2-trans-done',
+  s3_vocab:'s3-vocab-done',s3_game:'s3-game-done',s3_listen1:'s3-l1-done',
+  s3_cloze:'s3-cloze-done',s3_speak:'s3-speak-done',s3_comp:'s3-comp-done',
+  s3_listen2:'s3-l2-done',s3_trans:'s3-trans-done',
+  s4_vocab:'s4-vocab-done',s4_game:'s4-game-done',s4_listen1:'s4-l1-done',
+  s4_cloze:'s4-cloze-done',s4_speak:'s4-speak-done',s4_comp:'s4-comp-done',
+  s4_listen2:'s4-l2-done',s4_trans:'s4-trans-done',
+  s5_wsearch:'s5-wsearch-done',s5_tf:'s5-tf-done',s5_match:'s5-match-done',
+  s5_writing:'s5-writing-done',s5_rec:'s5-rec-done',
+};
+
+function getMissing(sectionIdx){
+  return (SECTION_TASKS[sectionIdx]||[]).filter(k=>!S.completedTasks[k]);
+}
+
+function nextSection(current){
+  const missing=getMissing(current);
+  if(missing.length>0){
+    const labels=missing.map(k=>TASK_LABELS[k.replace(/^s\d_/,'')]||k);
+    showToast('⚠️ Not done yet: '+labels.join(', '),'error');
+    // Flash the incomplete task cards red
+    missing.forEach((k,i)=>{
+      const doneEl=document.getElementById(DONE_ID_MAP[k]);
+      if(!doneEl) return;
+      const card=doneEl.closest('.task-card');
+      if(!card) return;
+      setTimeout(()=>{
+        card.style.transition='outline .2s';
+        card.style.outline='3px solid var(--red)';
+        card.style.borderRadius='0 0 12px 12px';
+        if(i===0) card.scrollIntoView({behavior:'smooth',block:'center'});
+        setTimeout(()=>{card.style.outline='';card.style.borderRadius='';},2500);
+      },i*120);
+    });
+    return;
+  }
+  const next=current+1;
+  if(next>4){finishMission();return;}
+  if(!S.unlockedSections.includes(next)) S.unlockedSections.push(next);
+  document.getElementById(`tab-${next}`).classList.add('unlocked');
+  goToSection(next);
+  showToast(`🚀 Mission ${next+1} unlocked!`,'success');
+}
+
+// ════════════════════════════════════════════════════════
+// FINISH + WHATSAPP
+// ════════════════════════════════════════════════════════
+function finishMission(){
+  const missing=getMissing(4);
+  if(missing.length>0){
+    const labels=missing.map(k=>TASK_LABELS[k.replace(/^s\d_/,'')]||k);
+    showToast('⚠️ Not done yet: '+labels.join(', '),'error');
+    missing.forEach((k,i)=>{
+      const doneEl=document.getElementById(DONE_ID_MAP[k]);
+      if(!doneEl) return;
+      const card=doneEl.closest('.task-card');
+      if(!card) return;
+      setTimeout(()=>{
+        card.style.outline='3px solid var(--red)';
+        card.style.borderRadius='0 0 12px 12px';
+        if(i===0) card.scrollIntoView({behavior:'smooth',block:'center'});
+        setTimeout(()=>{card.style.outline='';card.style.borderRadius='';},2500);
+      },i*120);
+    });
+    return;
+  }
+  const net=Math.max(0,S.rawScore-S.penalties);
+  const grade=getGrade(net);
+  document.getElementById('final-raw').textContent=`${S.rawScore.toFixed(0)} / 100`;
+  document.getElementById('final-pen').textContent=`−${S.penalties.toFixed(1)}`;
+  document.getElementById('final-net').innerHTML=`<strong>${net.toFixed(1)}</strong>`;
+  document.getElementById('final-grade-big').textContent=grade;
+  const msgs={
+    'A+':'🌟 Outstanding! Perfect work!','A':'🏆 Excellent! Amazing job!',
+    'B+':'🎯 Great work! Almost perfect!','B':'💪 Good job! Keep it up!',
+    'C+':'👍 Not bad! You can do even better!','C':'📚 Keep studying — you\'re improving!',
+    'D':'🔄 Try again to improve your score.','F':'💡 Review the material and try again!'
+  };
+  const el=document.getElementById('final-grade-msg');
+  if(el) el.textContent=msgs[grade]||'';
+  document.getElementById('main').style.display='none';
+  document.getElementById('nav-tabs').style.display='none';
+  document.getElementById('final-page').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBackFromFinal(){
+  document.getElementById('final-page').style.display='none';
+  document.getElementById('main').style.display='block';
+  document.getElementById('nav-tabs').style.display='flex';
+  goToSection(S.currentSection);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function dlFinalRec(){
+  const d=recData['s5'];
+  if(!d||!d.blob){showToast('⚠️ No final recording found! Record first in Mission 5.','error');return;}
+  const name=S.name||'student';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(d.blob);
+  a.download=`FINAL_recording_${name}.webm`;
+  a.click();
+  showToast('⬇ Downloading final recording!','success');
+}
+
+function restartMission(){localStorage.removeItem(SAVE_KEY);window.location.reload();}
+
+function sendWhatsApp(){
+  const name=S.name||document.getElementById('student-name').value||'Student';
+  const net=Math.max(0,S.rawScore-S.penalties);
+  const grade=getGrade(net);
+  const phone='972587484825';
+  const writing=S.writingText?S.writingText.trim():'';
+  const msg=`🔐 *Escape Room Blog Mission*%0A`+
+    `━━━━━━━━━━━━━━━━━━━━%0A`+
+    `👤 Student: *${encodeURIComponent(name)}*%0A`+
+    `🎯 Raw Score: *${S.rawScore.toFixed(0)}/100*%0A`+
+    `⚠️ Penalties: *${S.penalties.toFixed(1)}*%0A`+
+    `✅ Net Score: *${net.toFixed(1)}/100*%0A`+
+    `🏅 Final Grade: *${grade}*%0A`+
+    `━━━━━━━━━━━━━━━━━━━━%0A`+
+    (writing?`✍️ *Writing:*%0A_${encodeURIComponent(writing)}_%0A━━━━━━━━━━━━━━━━━━━━%0A`:'')+
+    `📎 _Audio files attached separately._`;
+  window.open(`https://wa.me/${phone}?text=${msg}`,'_blank');
+}
+
+// ════════════════════════════════════════════════════════
+// RESTORE FROM LOCALSTORAGE
+// ════════════════════════════════════════════════════════
+function restoreUI(){
+  // Name
+  document.getElementById('student-name').value=S.name||'';
+  // Score
+  updateScoreDisplay();
+  updateProgress();
+  // Tabs
+  S.unlockedSections.forEach(i=>{
+    const t=document.getElementById(`tab-${i}`);
+    if(t) t.classList.add('unlocked');
+  });
+  // Completed dones
+  Object.keys(S.completedTasks).forEach(key=>{
+    // map key to done-check id
+    const doneMap={
+      s1_vocab:'s1-vocab-done', s1_game:'s1-game-done', s1_listen1:'s1-l1-done',
+      s1_cloze:'s1-cloze-done', s1_speak:'s1-speak-done', s1_comp:'s1-comp-done',
+      s1_listen2:'s1-l2-done', s1_trans:'s1-trans-done',
+      s2_vocab:'s2-vocab-done', s2_game:'s2-game-done', s2_listen1:'s2-l1-done',
+      s2_cloze:'s2-cloze-done', s2_speak:'s2-speak-done', s2_comp:'s2-comp-done',
+      s2_listen2:'s2-l2-done', s2_trans:'s2-trans-done',
+      s3_vocab:'s3-vocab-done', s3_game:'s3-game-done', s3_listen1:'s3-l1-done',
+      s3_cloze:'s3-cloze-done', s3_speak:'s3-speak-done', s3_comp:'s3-comp-done',
+      s3_listen2:'s3-l2-done', s3_trans:'s3-trans-done',
+      s4_vocab:'s4-vocab-done', s4_game:'s4-game-done', s4_listen1:'s4-l1-done',
+      s4_cloze:'s4-cloze-done', s4_speak:'s4-speak-done', s4_comp:'s4-comp-done',
+      s4_listen2:'s4-l2-done', s4_trans:'s4-trans-done',
+      s5_wsearch:'s5-wsearch-done', s5_tf:'s5-tf-done', s5_match:'s5-match-done',
+      s5_writing:'s5-writing-done', s5_rec:'s5-rec-done',
+    };
+    if(doneMap[key]) showDone(doneMap[key]);
+  });
+  // Translations
+  restoreTranslations();
+  // Writing
+  if(S.writingText){
+    const ta=document.getElementById('s5-writing');
+    if(ta) ta.value=S.writingText;
+  }
+  // TF
+  restoreTF();
+  // Para selection
+  if(S.selectedPara!==null) selectPara(S.selectedPara);
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+function init(){
+  loadState();
+  // Build vocab
+  ['s1','s2','s3','s4'].forEach(buildVocab);
+  // Build MCQ (shuffled)
+  ['s1','s2','s3','s4'].forEach(buildMCQ);
+  // Build karaoke containers
+  Object.keys(KMAP).forEach(buildKaraoke);
+  // Restore cloze
+  ['s1','s2','s3','s4'].forEach(p=>{
+    const counts={s1:6,s2:7,s3:6,s4:6};
+    restoreCloze(p,counts[p]);
+  });
+  // Shuffle word bank chips
+  ['s1','s2','s3','s4'].forEach(p=>shuffleWordBank(`${p}-bank`));
+  // Mini-games
+  buildScramble('s1');
+  buildSort('s2');
+  buildSeq('s4');
+  buildMatching();
+  buildWordSearch();
+  // Restore all UI from saved state
+  restoreUI();
+  // Navigate to saved section
+  if(S.currentSection>0) goToSection(S.currentSection);
+  // Voice preload
+  if(window.speechSynthesis){
+    window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+    window.speechSynthesis.getVoices();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
